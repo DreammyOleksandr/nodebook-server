@@ -43,8 +43,19 @@ export class UsersController {
   }
 
   @UseGuards(AuthenticatedGuard)
+  @ApiOperation({ summary: 'Test protected route' })
+  @ApiResponse({ status: 200, description: 'Success' })
+  @ApiResponse({ status: 403, description: 'User was not authenticated' })
   @Get('/protected')
   getHello(@Request() req): string {
     return req.user
+  }
+
+  @Get('/logout')
+  @ApiOperation({ summary: 'Logout user' })
+  @ApiResponse({ status: 200, description: 'Success' })
+  logout(@Request() req): any {
+    req.session.destroy()
+    return { msg: 'The user session has ended' }
   }
 }
