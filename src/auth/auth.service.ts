@@ -10,6 +10,13 @@ export interface User {
 @Injectable()
 export class AuthService {
   constructor(private readonly usersService: UsersService) {}
+
+  async validateUserOAuth(email: string) {
+    const user = await this.usersService.getUser(email)
+    if (user) return { userId: user.id, userName: user.username }
+    return null
+  }
+
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.usersService.getUser(email)
     const passwordValid = await bcrypt.compare(password, user.password)

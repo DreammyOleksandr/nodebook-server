@@ -6,6 +6,7 @@ import { ApiTags, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { LocalAuthGuard } from 'src/auth/local.auth.guard'
 import { AuthenticatedGuard } from 'src/auth/authenticated.guard'
 import { LoginUserRequest } from 'src/requests/LoginUserRequest'
+import GoogleAuthGuard from './google.auth.guard'
 
 @ApiTags('auth')
 @Controller('auth')
@@ -57,5 +58,18 @@ export class AuthController {
   logout(@Request() req): any {
     req.session.destroy()
     return { msg: 'The user session has ended' }
+  }
+
+  @Get('google/login')
+  @UseGuards(GoogleAuthGuard)
+  async googleLogin() {}
+
+  @Get('google/callback')
+  @UseGuards(GoogleAuthGuard)
+  googleCallback(@Request() req) {
+    return {
+      message: 'Google login successful',
+      user: req.user,
+    }
   }
 }
