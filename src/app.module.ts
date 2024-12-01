@@ -9,7 +9,10 @@ import { UsersModule } from './users/users.module'
 @Module({
   imports: [
     AuthModule,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
+    }),
     MongooseModule.forRoot(process.env.MONGODB_LOCAL_CONNECTION),
     UsersModule,
   ],
