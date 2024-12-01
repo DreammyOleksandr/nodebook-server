@@ -1,7 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsStrongPassword, IsString } from 'class-validator'
+import { IsStrongPassword, IsString, IsEmail } from 'class-validator'
 
 export class CreateUserRequest {
+  @IsEmail()
+  @ApiProperty({
+    example: 'john_doe@gmail.com',
+    description: 'The email of the user',
+  })
+  email: string
+
   @IsString()
   @ApiProperty({ example: 'john_doe', description: 'The username of the user' })
   username: string

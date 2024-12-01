@@ -5,6 +5,7 @@ import { CreateUserRequest } from 'src/requests/CreateUserRequest'
 import { ApiTags, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { LocalAuthGuard } from 'src/auth/local.auth.guard'
 import { AuthenticatedGuard } from 'src/auth/authenticated.guard'
+import { LoginUserRequest } from 'src/requests/LoginUserRequest'
 
 @ApiTags('Users')
 @Controller('users')
@@ -20,6 +21,7 @@ export class UsersController {
     const saltOrRounds = Number(process.env.SALT_OR_ROUNDS)
     const hashedPassword = await bcrypt.hash(request.password, saltOrRounds)
     const result = await this.usersService.insertUser(
+      request.email,
       request.username,
       hashedPassword,
     )
@@ -32,10 +34,11 @@ export class UsersController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
+  @ApiBody({ type: LoginUserRequest })
   @ApiOperation({ summary: 'Login' })
   @ApiResponse({ status: 200, description: 'User successfully logged in' })
   @ApiResponse({ status: 400, description: 'Invalid input' })
-  login(@Request() req): any {
+  login(@Request() req) {
     return { User: req.user, msg: 'User logged in' }
   }
 
