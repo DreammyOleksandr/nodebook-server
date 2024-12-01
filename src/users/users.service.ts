@@ -17,9 +17,9 @@ export class UsersService {
     return newUser
   }
 
-  async getUser(userName: string) {
-    const username = userName.toLowerCase()
-    const user = await this.userModel.findOne({ username })
+  async getUser(email: string) {
+    email = email.toLowerCase()
+    const user = await this.userModel.findOne({ email })
     return user
   }
 }
