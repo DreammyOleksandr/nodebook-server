@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt'
 import { CreateUserRequest } from 'src/requests/CreateUserRequest'
 import { ApiTags, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { LocalAuthGuard } from 'src/auth/local.auth.guard'
+import { AuthenticatedGuard } from 'src/auth/authenticated.guard'
 
 @ApiTags('Users')
 @Controller('users')
@@ -38,7 +39,7 @@ export class UsersController {
     return { User: req.user, msg: 'User logged in' }
   }
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(AuthenticatedGuard)
   @Get('/protected')
   getHello(@Request() req): string {
     return req.user
