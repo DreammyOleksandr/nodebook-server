@@ -11,6 +11,11 @@ export const OAuthUserSchema = new mongoose.Schema(
       required: true,
       unique: false,
     },
+    service: {
+      type: String,
+      required: true,
+      unique: false,
+    },
   },
   { timestamps: true },
 )
@@ -19,4 +24,5 @@ export interface OAuthUser extends mongoose.Document {
   _id: string
   email: string
   username: string
+  service: string
 }
