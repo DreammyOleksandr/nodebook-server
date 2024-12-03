@@ -1,12 +1,12 @@
 import { Get, Body, Request, Controller, Post, UseGuards } from '@nestjs/common'
 import { UsersService } from 'src/users/users.service'
 import * as bcrypt from 'bcrypt'
-import { CreateUserRequest } from 'src/requests/CreateUserRequest'
+import { CreateUserRequest } from 'src/requests/create.user.request'
 import { ApiTags, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
-import { LocalAuthGuard } from 'src/auth/local.auth.guard'
+import { LocalAuthGuard } from 'src/utils/local/local.auth.guard'
 import { AuthenticatedGuard } from 'src/auth/authenticated.guard'
-import { LoginUserRequest } from 'src/requests/LoginUserRequest'
-import GoogleAuthGuard from './google.auth.guard'
+import { LoginUserRequest } from 'src/requests/login.user.request'
+import GoogleAuthGuard from '../utils/google/google.auth.guard'
 
 @ApiTags('auth')
 @Controller('auth')
@@ -62,10 +62,12 @@ export class AuthController {
 
   @Get('google/login')
   @UseGuards(GoogleAuthGuard)
+  @ApiOperation({ summary: 'Login through google (for redirect)' })
   async googleLogin() {}
 
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
+  @ApiOperation({ summary: 'Redirect after successful google login' })
   googleCallback(@Request() req) {
     return {
       message: 'Google login successful',
