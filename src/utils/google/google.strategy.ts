@@ -1,15 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy } from 'passport-google-oauth20'
-import { AuthService } from '../../auth/auth.service'
 import { UsersService } from 'src/users/users.service'
 
-@Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    @Inject('AUTH_SERVICE') private readonly authService: AuthService,
-    private readonly usersService: UsersService,
-  ) {
+  constructor(private readonly usersService: UsersService) {
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -26,10 +20,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     const { emails, displayName } = profile
 
     const email = emails[0].value
-    const user = await this.usersService.getOAuthUser(email)
+    const user = await this.usersService.getOAuthUserByEmail(email)
 
     return !user
-      ? await this.usersService.insertOAuthUser(email, displayName)
+      ? await this.usersService.insertOAuthUser(email, displayName, 'GOOGLE')
       : user
   }
 }

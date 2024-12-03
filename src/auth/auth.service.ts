@@ -1,34 +1,56 @@
-import { Injectable, NotAcceptableException } from '@nestjs/common'
-import { UsersService } from 'src/users/users.service'
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
-
-export interface User {
-  email: string
-  password: string
-}
+import { UsersService } from 'src/users/users.service'
+import { CreateUserRequest } from '../requests/users.requests'
 
 @Injectable()
 export class AuthService {
   constructor(private readonly usersService: UsersService) {}
 
-  async validateUserOAuth(email: string) {
-    const user = await this.usersService.getUser(email)
-    if (user) return { userId: user.id, userName: user.username }
-    return null
+  async registerUser(createUserDto: CreateUserRequest) {
+    const { email, username, password } = createUserDto
+
+    const existingUser = await this.usersService.getUserByEmail(email)
+    if (existingUser) {
+      throw new ConflictException('User already exists')
+    }
+
+    const hashedPassword = await this.hashPassword(password)
+    const user = await this.usersService.insertUser(
+      email,
+      username,
+      hashedPassword,
+    )
+
+    return { message: 'User registered successfully', userId: user.id }
   }
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usersService.getUser(email)
-    const passwordValid = await bcrypt.compare(password, user.password)
+    const user = await this.usersService.getUserByEmail(email)
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      throw new NotFoundException('Invalid email or password')
+    }
+    return { userId: user.id, email: user.email }
+  }
+
+  private async hashPassword(password: string) {
+    const saltOrRounds = Number(process.env.SALT_OR_ROUNDS)
+    return await bcrypt.hash(password, saltOrRounds)
+  }
+
+  async validateOAuthUser(email: string) {
+    const user = await this.usersService.getOAuthUserByEmail(email)
     if (!user) {
-      throw new NotAcceptableException('could not find the user')
+      return null
     }
-    if (user && passwordValid) {
-      return {
-        userId: user.id,
-        userName: user.username,
-      }
-    }
-    return null
+    return { userId: user.id, email: user.email, service: user.service }
+  }
+
+  async registerOAuthUser(email: string, username: string, service: string) {
+    return await this.usersService.insertOAuthUser(email, username, service)
   }
 }

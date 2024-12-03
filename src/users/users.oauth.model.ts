@@ -1,20 +1,21 @@
 import * as mongoose from 'mongoose'
+
 export const OAuthUserSchema = new mongoose.Schema(
   {
     email: {
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
     },
     username: {
       type: String,
       required: true,
-      unique: false,
     },
     service: {
       type: String,
       required: true,
-      unique: false,
+      enum: ['GOOGLE'],
     },
   },
   { timestamps: true },
