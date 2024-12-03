@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
+import { HttpExceptionFilter } from './filters/http-exception.filter'
 import * as session from 'express-session'
 import * as passport from 'passport'
 
@@ -25,7 +26,7 @@ async function bootstrap() {
     .build()
   const documentFactory = () => SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api', app, documentFactory)
-
+  app.useGlobalFilters(new HttpExceptionFilter())
   await app.listen(process.env.PORT ?? 3001)
 }
 bootstrap()
