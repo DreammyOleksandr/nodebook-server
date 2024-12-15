@@ -10,7 +10,7 @@ async function bootstrap() {
 
   app.use(
     session({
-      secret: 'keyboard',
+      secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
     }),
@@ -18,15 +18,25 @@ async function bootstrap() {
   app.use(passport.initialize())
   app.use(passport.session())
 
+  app.setGlobalPrefix('api')
+
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Accept, Authorization',
+    credentials: true,
+  })
+
   const config = new DocumentBuilder()
     .setTitle('Nodebook Server')
     .setDescription('The Nodebook API description')
     .setVersion('1.0')
     .addTag('nodebook')
     .build()
-  const documentFactory = () => SwaggerModule.createDocument(app, config)
-  SwaggerModule.setup('api', app, documentFactory)
+  const document = SwaggerModule.createDocument(app, config)
+  SwaggerModule.setup('swagger', app, document)
+
   app.useGlobalFilters(new HttpExceptionFilter())
-  await app.listen(process.env.PORT ?? 3001)
+  await app.listen(process.env.PORT ?? 8080)
 }
 bootstrap()
