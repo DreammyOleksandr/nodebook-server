@@ -37,14 +37,14 @@ export class AuthController {
     return { user: req.user, message: 'User logged in successfully' }
   }
 
-  @Get('/logout')
+  @Post('/logout')
   @ApiOperation({ summary: 'Logout user' })
   logout(@Req() req) {
     req.session.destroy()
     return { message: 'User session ended' }
   }
 
-  @Get('google/login')
+  @Post('google/login')
   @UseGuards(GoogleAuthGuard)
   @ApiOperation({ summary: 'Login through Google (only redirect)' })
   googleLogin() {}
