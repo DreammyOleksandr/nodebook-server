@@ -7,10 +7,17 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common'
-import { ApiTags, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
 import { AuthenticatedGuard } from 'src/auth/authenticated.guard'
 import { UsersService } from '../users/users.service'
 import { UpdateUserRequest } from '../requests/users.requests'
+import {
+  SwaggerGet,
+  SwaggerUpsert,
+  SwaggerDelete,
+  SwaggerForbidden,
+} from '../utils/swagger/swagger.decorators'
+import { UsersResponse } from 'src/responses/users.response'
 
 @ApiTags('users')
 @Controller('users')
@@ -18,19 +25,16 @@ import { UpdateUserRequest } from '../requests/users.requests'
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @UseGuards(AuthenticatedGuard)
   @Get('/me')
-  @ApiOperation({ summary: 'Get user details' })
+  @SwaggerGet('Get user details', UsersResponse)
+  @SwaggerForbidden()
   getUser(@Req() req) {
     return req.user
   }
 
-  @UseGuards(AuthenticatedGuard)
   @Patch('me')
-  @ApiOperation({ summary: 'Update current user' })
-  @ApiBody({ type: UpdateUserRequest })
-  @ApiResponse({ status: 200, description: 'User updated successfully' })
-  @ApiResponse({ status: 404, description: 'User not found' })
+  @SwaggerUpsert('Update current user', UpdateUserRequest, UsersResponse)
+  @SwaggerForbidden()
   async updateUser(@Body() updateUserDto: UpdateUserRequest, @Req() req) {
     const userId = req.session.passport?.user?.userId
 
@@ -60,10 +64,8 @@ export class UsersController {
   }
 
   @Delete('me')
-  @ApiOperation({ summary: 'Delete current user' })
-  @ApiResponse({ status: 200, description: 'User deleted successfully' })
-  @ApiResponse({ status: 404, description: 'User not found' })
-  @UseGuards(AuthenticatedGuard)
+  @SwaggerDelete('Delete current user')
+  @SwaggerForbidden()
   async deleteUser(@Req() req: any) {
     const userId = req.user.userId
     await this.usersService.removeUser(userId)

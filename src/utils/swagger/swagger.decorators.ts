@@ -34,3 +34,12 @@ export function SwaggerDelete(summary: string) {
     ApiResponse({ status: 204, description: `${summary} successfully` }),
   )
 }
+
+export function SwaggerForbidden() {
+  return applyDecorators(
+    ApiResponse({
+      status: 403,
+      description: 'Forbidden: User is not authorized to perform this action',
+    }),
+  )
+}
