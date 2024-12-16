@@ -10,7 +10,7 @@ async function bootstrap() {
 
   app.use(
     session({
-      secret: process.env.SESSION_SECRET || 'default-secret',
+      secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       cookie: {
@@ -40,6 +40,6 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, document)
 
   console.log(`Server is running on port: ${process.env.PORT}`)
-  await app.listen(process.env.PORT || 8080)
+  await app.listen(process.env.PORT)
 }
 bootstrap()
