@@ -34,7 +34,7 @@ export class AuthService {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new NotFoundException('Invalid email or password')
     }
-    return { userId: user.id, email: user.email }
+    return { userId: user.id, email: user.email, username: user.username }
   }
 
   private async hashPassword(password: string) {

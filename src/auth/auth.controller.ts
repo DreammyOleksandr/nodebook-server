@@ -19,7 +19,7 @@ export class AuthController {
     const user = await this.authService.registerUser(createUserDto)
     req.session.passport = {
       user: {
-        id: user.userId,
+        userId: user.userId,
         email: createUserDto.email,
         username: createUserDto.username,
       },
