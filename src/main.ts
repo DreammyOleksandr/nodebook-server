@@ -1,24 +1,27 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
-import { HttpExceptionFilter } from './filters/http-exception.filter'
 import * as session from 'express-session'
 import * as passport from 'passport'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
+  app.setGlobalPrefix('api')
 
   app.use(
     session({
-      secret: process.env.SESSION_SECRET,
+      secret: process.env.SESSION_SECRET || 'default-secret',
       resave: false,
       saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 3600000,
+      },
     }),
   )
   app.use(passport.initialize())
   app.use(passport.session())
-
-  app.setGlobalPrefix('api')
 
   app.enableCors({
     origin: '*',
@@ -36,7 +39,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('swagger', app, document)
 
-  app.useGlobalFilters(new HttpExceptionFilter())
-  await app.listen(process.env.PORT ?? 8080)
+  console.log(`Server is running on port: ${process.env.PORT}`)
+  await app.listen(process.env.PORT || 8080)
 }
 bootstrap()
