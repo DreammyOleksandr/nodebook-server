@@ -9,12 +9,18 @@ import {
   Query,
 } from '@nestjs/common'
 import { Book } from './models/book.model'
-import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
 import {
   CreateBookRequest,
   UpdateBookRequest,
 } from 'src/requests/books.requests'
 import { BooksService } from './books.service'
+import { BooksResponse } from 'src/responses/books.responses'
+import {
+  SwaggerUpsert,
+  SwaggerDelete,
+  SwaggerGet,
+} from 'src/utils/swagger/swagger.decorators'
 
 @ApiTags('books')
 @Controller('books')
@@ -22,33 +28,31 @@ export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create Book' })
-  @ApiBody({ type: CreateBookRequest })
+  @SwaggerUpsert('Create Book', CreateBookRequest, BooksResponse)
   async create(@Body() createBookRequest: CreateBookRequest): Promise<Book> {
     return this.booksService.create(createBookRequest)
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all Books' })
+  @SwaggerGet('Get all Books', [BooksResponse])
   async findAll(): Promise<Book[]> {
     return this.booksService.findAll()
   }
 
   @Get('search/:name')
-  @ApiOperation({ summary: 'Get Books by name' })
+  @SwaggerGet('Get Books by name', [BooksResponse])
   async findByName(@Query('name') name: string): Promise<Book[]> {
     return this.booksService.findByName(name)
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get Book by id' })
+  @SwaggerGet('Get Book by id', BooksResponse)
   async findOne(@Param('id') id: string): Promise<Book> {
     return this.booksService.findOne(id)
   }
 
   @Put(':id')
-  @ApiOperation({ summary: 'Update Book by id' })
-  @ApiBody({ type: UpdateBookRequest })
+  @SwaggerUpsert('Update Book by id', UpdateBookRequest, BooksResponse)
   async update(
     @Param('id') id: string,
     @Body() updateBookRequest: UpdateBookRequest,
@@ -57,7 +61,7 @@ export class BooksController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete Book by id' })
+  @SwaggerDelete('Delete Book by id')
   async remove(@Param('id') id: string): Promise<Book> {
     return this.booksService.remove(id)
   }
