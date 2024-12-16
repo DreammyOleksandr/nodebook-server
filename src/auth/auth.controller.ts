@@ -3,7 +3,6 @@ import { AuthService } from './auth.service'
 import { CreateUserRequest, LoginUserRequest } from '../requests/users.requests'
 import { ApiTags, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { LocalAuthGuard } from 'src/utils/local/local.auth.guard'
-import { AuthenticatedGuard } from 'src/auth/authenticated.guard'
 import GoogleAuthGuard from '../utils/google/google.auth.guard'
 
 @ApiTags('auth')
@@ -16,23 +15,26 @@ export class AuthController {
   @ApiBody({ type: CreateUserRequest })
   @ApiResponse({ status: 201, description: 'User successfully registered' })
   @ApiResponse({ status: 400, description: 'Invalid input' })
-  async signUp(@Body() createUserDto: CreateUserRequest) {
-    return this.authService.registerUser(createUserDto)
+  async signUp(@Body() createUserDto: CreateUserRequest, @Req() req) {
+    const user = await this.authService.registerUser(createUserDto)
+    req.session.passport = {
+      user: {
+        id: user.userId,
+        email: createUserDto.email,
+        username: createUserDto.username,
+      },
+    }
+    return {
+      user: { email: createUserDto.email, username: createUserDto.username },
+      message: 'User successfully signed up',
+    }
   }
-
   @UseGuards(LocalAuthGuard)
   @Post('/login')
   @ApiOperation({ summary: 'Login' })
   @ApiBody({ type: LoginUserRequest })
-  login(@Req() req) {
+  async login(@Req() req) {
     return { user: req.user, message: 'User logged in successfully' }
-  }
-
-  @UseGuards(AuthenticatedGuard)
-  @Get('/protected')
-  @ApiOperation({ summary: 'Test protected route' })
-  getHello(@Req() req) {
-    return req.user
   }
 
   @Get('/logout')
