@@ -43,3 +43,29 @@ export function SwaggerForbidden() {
     }),
   )
 }
+
+export function SwaggerConflict() {
+  return applyDecorators(
+    ApiResponse({
+      status: 409,
+      description: 'Conflict: The resource already exists',
+      schema: {
+        type: 'object',
+        properties: {
+          message: {
+            type: 'string',
+            example: 'User already exists',
+          },
+          error: {
+            type: 'string',
+            example: 'Conflict',
+          },
+          statusCode: {
+            type: 'integer',
+            example: 409,
+          },
+        },
+      },
+    }),
+  )
+}
