@@ -5,13 +5,13 @@ import { ApiTags } from '@nestjs/swagger'
 import {
   CreateCategoryRequest,
   UpdateCategoryRequest,
-} from 'src/requests/categories.requests'
+} from '../requests/categories.requests'
 import {
   SwaggerUpsert,
   SwaggerGet,
   SwaggerDelete,
 } from '../utils/swagger/swagger.decorators'
-import { CategoriesResponse } from 'src/responses/categories.responses'
+import { CategoriesResponse } from '../responses/categories.responses'
 
 @ApiTags('categories')
 @Controller('categories')
