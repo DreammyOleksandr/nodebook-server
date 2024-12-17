@@ -17,7 +17,7 @@ import {
   SwaggerDelete,
   SwaggerForbidden,
 } from '../utils/swagger/swagger.decorators'
-import { UsersResponse } from 'src/responses/users.response'
+import { UsersResponse } from '../responses/users.response'
 
 @ApiTags('users')
 @Controller('users')
