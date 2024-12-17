@@ -1,6 +1,10 @@
-import { Injectable } from '@nestjs/common'
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
+import { Model, isValidObjectId } from 'mongoose'
 import { Category } from './models/category.model'
 import {
   CreateCategoryRequest,
@@ -25,11 +29,19 @@ export class CategoriesService {
   }
 
   async findOne(id: string): Promise<Category> {
-    return await this.categoryModel.findById(id)
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException('Invalid ID format')
+    }
+
+    const category = await this.categoryModel.findById(id)
+    if (!category) {
+      throw new NotFoundException(`Category with ID ${id} not found`)
+    }
+    return category
   }
 
   async findByName(name: string): Promise<Category[]> {
-    return this.categoryModel.find({
+    return await this.categoryModel.find({
       name: { $regex: name, $options: 'i' },
     })
   }
@@ -38,14 +50,31 @@ export class CategoriesService {
     id: string,
     updateCategoryRequest: UpdateCategoryRequest,
   ): Promise<Category> {
-    return await this.categoryModel.findByIdAndUpdate(
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException('Invalid ID format')
+    }
+
+    const updatedCategory = await this.categoryModel.findByIdAndUpdate(
       id,
       updateCategoryRequest,
       { new: true },
     )
+    if (!updatedCategory) {
+      throw new NotFoundException(`Category with ID ${id} not found`)
+    }
+    return updatedCategory
   }
 
   async remove(id: string): Promise<Category> {
-    return await this.categoryModel.findByIdAndDelete(id)
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException('Invalid ID format')
+    }
+
+    const deletedCategory = await this.categoryModel.findByIdAndDelete(id)
+    if (!deletedCategory) {
+      throw new NotFoundException(`Category with ID ${id} not found`)
+    }
+
+    return deletedCategory
   }
 }

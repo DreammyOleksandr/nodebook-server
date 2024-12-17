@@ -3,16 +3,24 @@ import { ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger'
 
 export function SwaggerUpsert(
   summary: string,
-  bodyType: any,
+  requestType: any,
   responseType: any,
 ) {
   return applyDecorators(
     ApiOperation({ summary }),
-    ApiBody({ type: bodyType }),
+    ApiBody({ type: requestType }),
     ApiResponse({
-      status: 200,
-      description: `${summary} successfully`,
+      status: 201,
+      description: 'Operation successful',
       type: responseType,
+    }),
+    ApiResponse({
+      status: 400,
+      description: 'Bad Request: Invalid input or ID format',
+    }),
+    ApiResponse({
+      status: 404,
+      description: 'Resource not found',
     }),
   )
 }
@@ -22,8 +30,16 @@ export function SwaggerGet(summary: string, responseType: any) {
     ApiOperation({ summary }),
     ApiResponse({
       status: 200,
-      description: `${summary} successfully`,
+      description: 'Operation successful',
       type: responseType,
+    }),
+    ApiResponse({
+      status: 404,
+      description: 'Resource not found',
+    }),
+    ApiResponse({
+      status: 400,
+      description: 'Bad Request: Invalid request format',
     }),
   )
 }
@@ -31,8 +47,33 @@ export function SwaggerGet(summary: string, responseType: any) {
 export function SwaggerDelete(summary: string) {
   return applyDecorators(
     ApiOperation({ summary }),
-    ApiResponse({ status: 204, description: `${summary} successfully` }),
+    ApiResponse({
+      status: 200,
+      description: 'Resource deleted successfully',
+    }),
+    ApiResponse({
+      status: 400,
+      description: 'Bad Request: Invalid ID format',
+    }),
+    ApiResponse({
+      status: 404,
+      description: 'Resource not found',
+    }),
   )
+}
+
+export function SwaggerNotFound() {
+  return ApiResponse({
+    status: 404,
+    description: 'Resource not found',
+  })
+}
+
+export function SwaggerBadRequest() {
+  return ApiResponse({
+    status: 400,
+    description: 'Bad Request: Invalid input or ID format',
+  })
 }
 
 export function SwaggerForbidden() {
