@@ -79,7 +79,7 @@ export class UpdateBookRequest {
     example: '607d1f77bcf86cd799439011',
     description: 'The category ID that the book belongs to',
   })
-  categoryId?: Types.ObjectId
+  categoryId?: string
 
   @IsOptional()
   @IsNumber()

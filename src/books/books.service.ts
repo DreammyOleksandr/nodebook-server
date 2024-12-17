@@ -17,17 +17,19 @@ export class BooksService {
   }
 
   async findAll(): Promise<Book[]> {
-    return await this.bookModel.find()
+    return await this.bookModel.find().populate('categoryId')
   }
 
   async findByName(name: string): Promise<Book[]> {
-    return await this.bookModel.find({
-      name: { $regex: name, $options: 'i' },
-    })
+    return await this.bookModel
+      .find({
+        name: { $regex: name, $options: 'i' },
+      })
+      .populate('categoryId')
   }
 
   async findOne(id: string): Promise<Book> {
-    return await this.bookModel.findById(id)
+    return await this.bookModel.findById(id).populate('categoryId')
   }
 
   async update(

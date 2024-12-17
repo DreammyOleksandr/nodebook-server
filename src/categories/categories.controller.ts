@@ -11,7 +11,7 @@ import {
   SwaggerGet,
   SwaggerDelete,
 } from '../utils/swagger/swagger.decorators'
-import { CategoriesResponse } from 'src/responses/category.responses'
+import { CategoriesResponse } from 'src/responses/categories.responses'
 
 @ApiTags('categories')
 @Controller('categories')

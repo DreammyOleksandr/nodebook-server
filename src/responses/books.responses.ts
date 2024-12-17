@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Types } from 'mongoose'
+import { CategoriesResponse } from './categories.responses'
 
 export class BooksResponse {
   @ApiProperty({
@@ -33,10 +33,10 @@ export class BooksResponse {
   author: string
 
   @ApiProperty({
-    example: '607d1f77bcf86cd799439011',
+    example: CategoriesResponse,
     description: 'The category ID that the book belongs to',
   })
-  categoryId: Types.ObjectId
+  categoryId: CategoriesResponse
 
   @ApiProperty({
     example: 4.5,
