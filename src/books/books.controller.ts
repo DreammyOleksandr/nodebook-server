@@ -4,9 +4,11 @@ import {
   Post,
   Body,
   Param,
-  Put,
   Delete,
   Query,
+  Req,
+  UseGuards,
+  Patch,
 } from '@nestjs/common'
 import { Book } from './models/book.model'
 import { ApiTags } from '@nestjs/swagger'
@@ -21,6 +23,11 @@ import {
   SwaggerDelete,
   SwaggerGet,
 } from 'src/utils/swagger/swagger.decorators'
+import { AuthenticatedGuard } from 'src/auth/authenticated.guard'
+import {
+  AddCommentRequest,
+  AddRatingRequest,
+} from 'src/requests/reviews.requests'
 
 @ApiTags('books')
 @Controller('books')
@@ -51,7 +58,7 @@ export class BooksController {
     return this.booksService.findOne(id)
   }
 
-  @Put(':id')
+  @Patch(':id')
   @SwaggerUpsert('Update Book by id', UpdateBookRequest, BooksResponse)
   async update(
     @Param('id') id: string,
@@ -64,5 +71,32 @@ export class BooksController {
   @SwaggerDelete('Delete Book by id')
   async remove(@Param('id') id: string): Promise<Book> {
     return this.booksService.remove(id)
+  }
+
+  @Post(':id/comment')
+  @UseGuards(AuthenticatedGuard)
+  @SwaggerUpsert('Add comment to the book', AddCommentRequest, BooksResponse)
+  async addComment(
+    @Param('id') bookId: string,
+    @Body() comment: AddCommentRequest,
+    @Req() req,
+  ): Promise<Book> {
+    console.log(`This is a comment: ${comment.comment}`)
+    return this.booksService.addComment(
+      bookId,
+      req.user.userId,
+      comment.comment,
+    )
+  }
+
+  @Post(':id/review')
+  @UseGuards(AuthenticatedGuard)
+  @SwaggerUpsert('Add rating to the book', AddRatingRequest, BooksResponse)
+  async addReview(
+    @Param('id') bookId: string,
+    @Body() rating: AddRatingRequest,
+    @Req() req,
+  ): Promise<Book> {
+    return this.booksService.addReview(bookId, req.user.userId, rating.rating)
   }
 }
