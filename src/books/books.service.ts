@@ -11,6 +11,7 @@ import {
   CreateBookRequest,
   UpdateBookRequest,
 } from 'src/requests/books.requests'
+import { log } from 'console'
 
 @Injectable()
 export class BooksService {
@@ -153,5 +154,58 @@ export class BooksService {
     book.averageRating = totalRatings / book.reviews.length
 
     return await book.save()
+  }
+
+  async likeBook(bookId: string, userId: string): Promise<Book> {
+    if (!isValidObjectId(bookId)) {
+      throw new BadRequestException('Invalid Book ID format')
+    }
+
+    const book = await this.bookModel.findById(bookId)
+    if (!book) {
+      throw new NotFoundException(`Book with ID ${bookId} not found`)
+    }
+
+    if (book.likes.includes(new Types.ObjectId(userId))) {
+      throw new BadRequestException('You have already liked this book')
+    }
+
+    book.likes.push(new Types.ObjectId(userId))
+    return await book.save()
+  }
+
+  async dislikeBook(bookId: string, userId: string): Promise<Book> {
+    if (!isValidObjectId(bookId)) {
+      throw new BadRequestException('Invalid Book ID format')
+    }
+
+    const book = await this.bookModel.findById(bookId)
+    if (!book) {
+      throw new NotFoundException(`Book with ID ${bookId} not found`)
+    }
+
+    const likeIndex = book.likes.indexOf(new Types.ObjectId(userId))
+    if (likeIndex === -1) {
+      throw new BadRequestException('You have not liked this book yet')
+    }
+
+    book.likes.splice(likeIndex, 1)
+    return await book.save()
+  }
+
+  async getLikedBooks(userId: string): Promise<Book[]> {
+    log('everything is aight 1')
+    if (!isValidObjectId(userId)) {
+      throw new BadRequestException('Invalid User ID format')
+    }
+    log('everything is aight 2')
+
+    const books = await this.bookModel
+      .find({ likes: userId })
+      .populate('categoryId')
+      .populate('comments.userId', 'username email')
+      .populate('reviews.userId', 'username email')
+
+    return books
   }
 }

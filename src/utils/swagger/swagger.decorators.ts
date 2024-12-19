@@ -25,6 +25,25 @@ export function SwaggerUpsert(
   )
 }
 
+export function SwaggerUpsertNoBody(summary: string, responseType: any) {
+  return applyDecorators(
+    ApiOperation({ summary }),
+    ApiResponse({
+      status: 201,
+      description: 'Operation successful',
+      type: responseType,
+    }),
+    ApiResponse({
+      status: 400,
+      description: 'Bad Request: Invalid input or ID format',
+    }),
+    ApiResponse({
+      status: 404,
+      description: 'Resource not found',
+    }),
+  )
+}
+
 export function SwaggerGet(summary: string, responseType: any) {
   return applyDecorators(
     ApiOperation({ summary }),

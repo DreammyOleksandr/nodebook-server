@@ -8,6 +8,7 @@ export interface Book extends Document {
   averageRating: number
   comments: { userId: Types.ObjectId; comment: string }[]
   reviews: { userId: Types.ObjectId; rating: number }[]
+  likes: Types.ObjectId[]
 }
 
 export const BookSchema = new Schema<Book>({
@@ -28,4 +29,5 @@ export const BookSchema = new Schema<Book>({
       rating: { type: Number, required: true, min: 1, max: 5 },
     },
   ],
+  likes: [{ type: Schema.Types.ObjectId, ref: 'user' }],
 })

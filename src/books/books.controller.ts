@@ -22,6 +22,7 @@ import {
   SwaggerUpsert,
   SwaggerDelete,
   SwaggerGet,
+  SwaggerUpsertNoBody,
 } from 'src/utils/swagger/swagger.decorators'
 import { AuthenticatedGuard } from 'src/auth/authenticated.guard'
 import {
@@ -50,6 +51,13 @@ export class BooksController {
   @SwaggerGet('Get Books by name', [BooksResponse])
   async findByName(@Query('name') name: string): Promise<Book[]> {
     return this.booksService.findByName(name)
+  }
+
+  @Get('/liked')
+  @UseGuards(AuthenticatedGuard)
+  @SwaggerGet('Get liked books', BooksResponse)
+  async getLikedBooks(@Req() req): Promise<Book[]> {
+    return this.booksService.getLikedBooks(req.user.userId)
   }
 
   @Get(':id')
@@ -98,5 +106,19 @@ export class BooksController {
     @Req() req,
   ): Promise<Book> {
     return this.booksService.addReview(bookId, req.user.userId, rating.rating)
+  }
+
+  @Post(':id/like')
+  @UseGuards(AuthenticatedGuard)
+  @SwaggerUpsertNoBody('Like the book', BooksResponse)
+  async likeBook(@Param('id') bookId: string, @Req() req): Promise<Book> {
+    return this.booksService.likeBook(bookId, req.user.userId)
+  }
+
+  @Post(':id/dislike')
+  @UseGuards(AuthenticatedGuard)
+  @SwaggerUpsertNoBody('Dislike the book', BooksResponse)
+  async dislikeBook(@Param('id') bookId: string, @Req() req): Promise<Book> {
+    return this.booksService.dislikeBook(bookId, req.user.userId)
   }
 }
