@@ -15,20 +15,20 @@ import { ApiTags } from '@nestjs/swagger'
 import {
   CreateBookRequest,
   UpdateBookRequest,
-} from 'src/requests/books.requests'
+} from '../requests/books.requests'
 import { BooksService } from './books.service'
-import { BooksResponse } from 'src/responses/books.responses'
+import { BooksResponse } from '../responses/books.responses'
 import {
   SwaggerUpsert,
   SwaggerDelete,
   SwaggerGet,
   SwaggerUpsertNoBody,
-} from 'src/utils/swagger/swagger.decorators'
-import { AuthenticatedGuard } from 'src/auth/authenticated.guard'
+} from '../utils/swagger/swagger.decorators'
+import { AuthenticatedGuard } from '../auth/authenticated.guard'
 import {
   AddCommentRequest,
   AddRatingRequest,
-} from 'src/requests/reviews.requests'
+} from '../requests/reviews.requests'
 
 @ApiTags('books')
 @Controller('books')

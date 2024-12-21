@@ -5,7 +5,7 @@ import { NotFoundException, BadRequestException } from '@nestjs/common'
 import {
   CreateCategoryRequest,
   UpdateCategoryRequest,
-} from 'src/requests/categories.requests'
+} from '../requests/categories.requests'
 
 const mockCategory = {
   _id: '507f1f77bcf86cd799439011',

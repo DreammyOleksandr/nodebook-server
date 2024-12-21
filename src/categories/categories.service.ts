@@ -9,7 +9,7 @@ import { Category } from './models/category.model'
 import {
   CreateCategoryRequest,
   UpdateCategoryRequest,
-} from 'src/requests/categories.requests'
+} from '../requests/categories.requests'
 
 @Injectable()
 export class CategoriesService {

@@ -10,7 +10,7 @@ import { Book } from './models/book.model'
 import {
   CreateBookRequest,
   UpdateBookRequest,
-} from 'src/requests/books.requests'
+} from '../requests/books.requests'
 import { log } from 'console'
 
 @Injectable()
