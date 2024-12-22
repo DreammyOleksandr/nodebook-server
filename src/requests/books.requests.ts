@@ -31,20 +31,20 @@ export class CreateBookRequest {
   @IsNotEmpty()
   author: string
 
+  @IsOptional()
+  @ApiProperty({
+    example: 'Description',
+    description: 'The description of the book',
+  })
+  @IsNotEmpty()
+  description: string
+
   @ApiProperty({
     example: '607d1f77bcf86cd799439011',
     description: 'The category ID that the book belongs to',
   })
   @IsNotEmpty()
   categoryId: Types.ObjectId
-
-  @ApiProperty({
-    example: 4.5,
-    description: 'The average rating of the book',
-  })
-  @IsNumber()
-  @Min(0)
-  averageRating: number
 }
 
 export class UpdateBookRequest {
@@ -74,19 +74,18 @@ export class UpdateBookRequest {
   author?: string
 
   @IsOptional()
+  @ApiProperty({
+    example: 'Description',
+    description: 'The description of the book',
+  })
+  @IsNotEmpty()
+  description: string
+
+  @IsOptional()
   @IsString()
   @ApiProperty({
     example: '607d1f77bcf86cd799439011',
     description: 'The category ID that the book belongs to',
   })
   categoryId?: string
-
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @ApiProperty({
-    example: 4.5,
-    description: 'The average rating of the book',
-  })
-  averageRating?: number
 }

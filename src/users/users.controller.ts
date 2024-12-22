@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { AuthenticatedGuard } from 'src/auth/authenticated.guard'
+import { AuthenticatedGuard } from '../auth/authenticated.guard'
 import { UsersService } from '../users/users.service'
 import { UpdateUserRequest } from '../requests/users.requests'
 import {
@@ -17,7 +17,7 @@ import {
   SwaggerDelete,
   SwaggerForbidden,
 } from '../utils/swagger/swagger.decorators'
-import { UsersResponse } from 'src/responses/users.response'
+import { UsersResponse } from '../responses/users.response'
 
 @ApiTags('users')
 @Controller('users')

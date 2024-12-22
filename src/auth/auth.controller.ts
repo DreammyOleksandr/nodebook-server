@@ -8,9 +8,9 @@ import {
   SwaggerForbidden,
   SwaggerConflict,
 } from '../utils/swagger/swagger.decorators'
-import { LocalAuthGuard } from 'src/utils/local/local.auth.guard'
+import { LocalAuthGuard } from '../utils/local/local.auth.guard'
 import GoogleAuthGuard from '../utils/google/google.auth.guard'
-import { AuthResponse } from 'src/responses/auth.responses'
+import { AuthResponse } from '../responses/auth.responses'
 
 @ApiTags('auth')
 @Controller('auth')

@@ -16,8 +16,9 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
       cookie: {
+        sameSite: 'lax',
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: false,
         maxAge: 3600000,
       },
     }),
@@ -26,7 +27,7 @@ async function bootstrap() {
   app.use(passport.session())
 
   app.enableCors({
-    origin: '*',
+    origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Accept, Authorization',
     credentials: true,
