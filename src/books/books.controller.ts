@@ -105,7 +105,12 @@ export class BooksController {
     @Body() rating: AddRatingRequest,
     @Req() req,
   ): Promise<Book> {
-    return this.booksService.addReview(bookId, req.user.userId, rating.rating)
+    return this.booksService.addReview(
+      bookId,
+      req.user.userId,
+      rating.rating,
+      rating.comment,
+    )
   }
 
   @Post(':id/like')

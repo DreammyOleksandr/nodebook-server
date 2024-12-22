@@ -124,6 +124,7 @@ export class BooksService {
     bookId: string,
     userId: string,
     rating: number,
+    comment: string,
   ): Promise<Book> {
     if (!isValidObjectId(bookId)) {
       throw new BadRequestException('Invalid Book ID format')
@@ -144,7 +145,7 @@ export class BooksService {
     if (existingReviewIndex > -1) {
       book.reviews[existingReviewIndex].rating = rating
     } else {
-      book.reviews.push({ userId: new Types.ObjectId(userId), rating })
+      book.reviews.push({ userId: new Types.ObjectId(userId), rating, comment })
     }
 
     const totalRatings = book.reviews.reduce(

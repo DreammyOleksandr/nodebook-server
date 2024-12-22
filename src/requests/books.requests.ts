@@ -31,6 +31,14 @@ export class CreateBookRequest {
   @IsNotEmpty()
   author: string
 
+  @IsOptional()
+  @ApiProperty({
+    example: 'Description',
+    description: 'The description of the book',
+  })
+  @IsNotEmpty()
+  description: string
+
   @ApiProperty({
     example: '607d1f77bcf86cd799439011',
     description: 'The category ID that the book belongs to',
@@ -64,6 +72,14 @@ export class UpdateBookRequest {
     description: 'The author of the book',
   })
   author?: string
+
+  @IsOptional()
+  @ApiProperty({
+    example: 'Description',
+    description: 'The description of the book',
+  })
+  @IsNotEmpty()
+  description: string
 
   @IsOptional()
   @IsString()

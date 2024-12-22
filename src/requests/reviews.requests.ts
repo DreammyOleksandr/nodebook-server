@@ -17,4 +17,11 @@ export class AddRatingRequest {
   })
   @IsNotEmpty()
   rating: number
+
+  @ApiProperty({
+    example: 'Positive comment about the book',
+    description: 'The comment for the book',
+  })
+  @IsNotEmpty()
+  comment: string
 }

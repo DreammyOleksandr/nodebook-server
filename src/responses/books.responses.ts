@@ -33,6 +33,12 @@ export class BooksResponse {
   author: string
 
   @ApiProperty({
+    example: 'Description',
+    description: 'The description of the book',
+  })
+  description: string
+
+  @ApiProperty({
     example: CategoriesResponse,
     description: 'The category ID that the book belongs to',
   })
