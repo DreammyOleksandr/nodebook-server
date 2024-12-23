@@ -20,7 +20,7 @@ import {
 } from '../utils/swagger/swagger.decorators'
 import { UsersResponse } from 'src/responses/users.response'
 import { SupportMessageRequest } from 'src/requests/support.requests'
-import { MessagesService } from './messages.service'
+import { MessagesService } from 'libs/message'
 
 @ApiTags('users')
 @Controller('users')

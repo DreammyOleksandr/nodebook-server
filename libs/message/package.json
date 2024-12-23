@@ -1,0 +1,8 @@
+{
+  "name": "@dreammy/message",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "dependencies": {
+    "nodemailer": "^6.9.16"
+  }
+}
