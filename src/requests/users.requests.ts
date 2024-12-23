@@ -36,11 +36,12 @@ export class CreateUserRequest {
 }
 
 export class LoginUserRequest {
+  @IsNotEmpty()
   @ApiProperty({
     example: 'john_doe@gmail.com',
     description: 'Email of the user',
   })
-  username: string
+  email: string
 
   @IsNotEmpty()
   @IsStrongPassword({
