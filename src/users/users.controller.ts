@@ -2,6 +2,7 @@ import {
   Get,
   Body,
   Controller,
+  Post,
   Delete,
   Patch,
   Req,
@@ -15,26 +16,31 @@ import {
   SwaggerGet,
   SwaggerUpsert,
   SwaggerDelete,
-  SwaggerForbidden,
+  SwaggerUnauthorized,
 } from '../utils/swagger/swagger.decorators'
-import { UsersResponse } from '../responses/users.response'
+import { UsersResponse } from 'src/responses/users.response'
+import { SupportMessageRequest } from 'src/requests/support.requests'
+import { MessagesService } from './messages.service'
 
 @ApiTags('users')
 @Controller('users')
 @UseGuards(AuthenticatedGuard)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly messagesService: MessagesService,
+  ) {}
 
   @Get('/me')
   @SwaggerGet('Get user details', UsersResponse)
-  @SwaggerForbidden()
+  @SwaggerUnauthorized()
   getUser(@Req() req) {
     return req.user
   }
 
   @Patch('me')
   @SwaggerUpsert('Update current user', UpdateUserRequest, UsersResponse)
-  @SwaggerForbidden()
+  @SwaggerUnauthorized()
   async updateUser(@Body() updateUserDto: UpdateUserRequest, @Req() req) {
     const userId = req.session.passport?.user?.userId
 
@@ -65,11 +71,27 @@ export class UsersController {
 
   @Delete('me')
   @SwaggerDelete('Delete current user')
-  @SwaggerForbidden()
+  @SwaggerUnauthorized()
   async deleteUser(@Req() req: any) {
     const userId = req.user.userId
     await this.usersService.removeUser(userId)
     req.session.destroy()
     return { message: 'User deleted successfully' }
+  }
+
+  @Post('/message/support')
+  @SwaggerUpsert('Send support message', SupportMessageRequest, String)
+  @SwaggerUnauthorized()
+  async sendSupportMessage(
+    @Req() req,
+    @Body() supportMessageDto: SupportMessageRequest,
+  ) {
+    const { subject, content } = supportMessageDto
+    const response = await this.messagesService.sendSupportMessage(
+      req.user.email,
+      subject,
+      content,
+    )
+    return response
   }
 }
