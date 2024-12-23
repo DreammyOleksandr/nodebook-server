@@ -5,7 +5,7 @@ import { ApiTags } from '@nestjs/swagger'
 import {
   SwaggerUpsert,
   SwaggerGet,
-  SwaggerForbidden,
+  SwaggerUnauthorized,
   SwaggerConflict,
 } from '../utils/swagger/swagger.decorators'
 import { LocalAuthGuard } from '../utils/local/local.auth.guard'
@@ -42,14 +42,14 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('/login')
   @SwaggerUpsert('Login', LoginUserRequest, AuthResponse)
-  @SwaggerForbidden()
+  @SwaggerUnauthorized()
   async login(@Req() req) {
     return { usersResponse: req.user, message: 'User logged in successfully' }
   }
 
   @Post('/logout')
   @SwaggerGet('Logout user', String)
-  @SwaggerForbidden()
+  @SwaggerUnauthorized()
   logout(@Req() req) {
     req.session.destroy()
     return { message: 'User session ended' }
@@ -62,7 +62,7 @@ export class AuthController {
 
   @Get('google/callback')
   @SwaggerGet('Handle Google login callback', AuthResponse)
-  @SwaggerForbidden()
+  @SwaggerUnauthorized()
   @UseGuards(GoogleAuthGuard)
   async googleCallback(@Req() req) {
     const { email, name } = req.user

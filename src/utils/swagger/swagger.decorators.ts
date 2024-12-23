@@ -104,6 +104,16 @@ export function SwaggerForbidden() {
   )
 }
 
+export function SwaggerUnauthorized() {
+  return applyDecorators(
+    ApiResponse({
+      status: 401,
+      description:
+        'Unauthorized: User is not authorized to perform this action',
+    }),
+  )
+}
+
 export function SwaggerConflict() {
   return applyDecorators(
     ApiResponse({
