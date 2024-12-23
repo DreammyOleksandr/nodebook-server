@@ -1,4 +1,12 @@
-import { Get, Body, Controller, Post, UseGuards, Req } from '@nestjs/common'
+import {
+  Get,
+  Body,
+  Controller,
+  Post,
+  UseGuards,
+  Req,
+  Redirect,
+} from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { CreateUserRequest, LoginUserRequest } from '../requests/users.requests'
 import { ApiTags } from '@nestjs/swagger'
@@ -64,6 +72,7 @@ export class AuthController {
   @SwaggerGet('Handle Google login callback', AuthResponse)
   @SwaggerUnauthorized()
   @UseGuards(GoogleAuthGuard)
+  @Redirect('/swagger')
   async googleCallback(@Req() req) {
     const { email, name } = req.user
 
