@@ -18,9 +18,9 @@ import {
   SwaggerDelete,
   SwaggerUnauthorized,
 } from '../utils/swagger/swagger.decorators'
-import { UsersResponse } from 'src/responses/users.response'
-import { SupportMessageRequest } from 'src/requests/support.requests'
-import { MessagesService } from 'libs/message'
+import { UsersResponse } from '../responses/users.response'
+import { SupportMessageRequest } from '../requests/support.requests'
+import { MessagesService } from '../../libs/message'
 
 @ApiTags('users')
 @Controller('users')
