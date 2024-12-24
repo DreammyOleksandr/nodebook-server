@@ -29,3 +29,19 @@ jobs:
 
       - name: Build project
         run: npm run build
+
+      - name: Run e2e tests
+        env:
+          PORT: ${{ secrets.PORT }}
+          MONGODB_LOCAL_CONNECTION: ${{ secrets.MONGODB_LOCAL_CONNECTION }}
+          SALT_OR_ROUNDS: ${{ secrets.SALT_OR_ROUNDS }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_CALLBACK_URL: ${{ secrets.GOOGLE_CALLBACK_URL }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+          EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE }}
+          EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
+        run: npm run test:e2e
