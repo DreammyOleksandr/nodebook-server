@@ -74,7 +74,7 @@ export class UsersController {
   @SwaggerUnauthorized()
   async deleteUser(@Req() req: any) {
     const userId = req.user.userId
-    await this.usersService.removeUser(userId)
+    await await this.usersService.removeUser(userId)
     req.session.destroy()
     return { message: 'User deleted successfully' }
   }

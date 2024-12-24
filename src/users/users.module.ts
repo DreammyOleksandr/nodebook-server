@@ -4,7 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { UserSchema } from './models/users.model'
 import { OAuthUserSchema } from './models/users.oauth.model'
 import { UsersController } from './users.controller'
-import { MessagesService } from 'libs/message'
+import { MessagesService } from '../../libs/message'
 
 @Module({
   imports: [
