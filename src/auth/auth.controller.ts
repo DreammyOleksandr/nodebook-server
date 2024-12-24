@@ -1,12 +1,4 @@
-import {
-  Get,
-  Body,
-  Controller,
-  Post,
-  UseGuards,
-  Req,
-  Redirect,
-} from '@nestjs/common'
+import { Body, Controller, Post, UseGuards, Req } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { CreateUserRequest, LoginUserRequest } from '../requests/users.requests'
 import { ApiTags } from '@nestjs/swagger'
@@ -17,7 +9,6 @@ import {
   SwaggerConflict,
 } from '../utils/swagger/swagger.decorators'
 import { LocalAuthGuard } from '../utils/local/local.auth.guard'
-import GoogleAuthGuard from '../utils/google/google.auth.guard'
 import { AuthResponse } from '../responses/auth.responses'
 
 @ApiTags('auth')
@@ -61,32 +52,5 @@ export class AuthController {
   logout(@Req() req) {
     req.session.destroy()
     return { message: 'User session ended' }
-  }
-
-  @Post('google/login')
-  @SwaggerGet('Login through Google (only redirect)', String)
-  @UseGuards(GoogleAuthGuard)
-  googleLogin() {}
-
-  @Get('google/callback')
-  @SwaggerGet('Handle Google login callback', AuthResponse)
-  @SwaggerUnauthorized()
-  @UseGuards(GoogleAuthGuard)
-  @Redirect('/swagger')
-  async googleCallback(@Req() req) {
-    const { email, name } = req.user
-
-    const existingUser = await this.authService.validateOAuthUser(email)
-
-    if (!existingUser) {
-      const newUser = await this.authService.registerOAuthUser(
-        email,
-        name,
-        'GOOGLE',
-      )
-      return { usersResponse: newUser, message: 'Google login successful' }
-    }
-
-    return { usersResponse: existingUser, message: 'Google login successful' }
   }
 }
