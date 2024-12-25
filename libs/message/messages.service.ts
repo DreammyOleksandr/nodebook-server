@@ -12,8 +12,6 @@ export class MessagesService {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
-    logger: true,
-    debug: true,
   })
 
   async sendSupportMessage(email: string, subject: string, content: string) {

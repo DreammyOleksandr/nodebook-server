@@ -23,25 +23,25 @@ export class CategoriesController {
   async create(
     @Body() createCategoryRequest: CreateCategoryRequest,
   ): Promise<Category> {
-    return this.categoryService.create(createCategoryRequest)
+    return await this.categoryService.create(createCategoryRequest)
   }
 
   @Get()
   @SwaggerGet('Get all categories', [CategoriesResponse])
   async findAll(): Promise<Category[]> {
-    return this.categoryService.findAll()
+    return await this.categoryService.findAll()
   }
 
   @Get(':id')
   @SwaggerGet('Get category by id', CategoriesResponse)
   async findOne(@Param('id') id: string): Promise<Category> {
-    return this.categoryService.findOne(id)
+    return await this.categoryService.findOne(id)
   }
 
   @Get('/search/:name')
   @SwaggerGet('Get categories by name', [CategoriesResponse])
   async findByName(@Param('name') name: string): Promise<Category[]> {
-    return this.categoryService.findByName(name)
+    return await this.categoryService.findByName(name)
   }
 
   @Put(':id')
@@ -54,12 +54,12 @@ export class CategoriesController {
     @Param('id') id: string,
     @Body() updateCategoryRequest: UpdateCategoryRequest,
   ): Promise<Category> {
-    return this.categoryService.update(id, updateCategoryRequest)
+    return await this.categoryService.update(id, updateCategoryRequest)
   }
 
   @Delete(':id')
   @SwaggerDelete('Delete category by id')
   async remove(@Param('id') id: string): Promise<Category> {
-    return this.categoryService.remove(id)
+    return await this.categoryService.remove(id)
   }
 }

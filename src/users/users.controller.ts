@@ -18,9 +18,9 @@ import {
   SwaggerDelete,
   SwaggerUnauthorized,
 } from '../utils/swagger/swagger.decorators'
-import { UsersResponse } from 'src/responses/users.response'
-import { SupportMessageRequest } from 'src/requests/support.requests'
-import { MessagesService } from 'libs/message'
+import { UsersResponse } from '../responses/users.response'
+import { SupportMessageRequest } from '../requests/support.requests'
+import { MessagesService } from '../../libs/message'
 
 @ApiTags('users')
 @Controller('users')
@@ -74,7 +74,7 @@ export class UsersController {
   @SwaggerUnauthorized()
   async deleteUser(@Req() req: any) {
     const userId = req.user.userId
-    await this.usersService.removeUser(userId)
+    await await this.usersService.removeUser(userId)
     req.session.destroy()
     return { message: 'User deleted successfully' }
   }
