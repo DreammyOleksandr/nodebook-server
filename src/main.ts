@@ -4,21 +4,22 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import * as session from 'express-session'
 import * as passport from 'passport'
 import { HttpExceptionFilter } from './filters/http-exception.filter'
+import { NestExpressApplication } from '@nestjs/platform-express'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create<NestExpressApplication>(AppModule)
   app.setGlobalPrefix('api')
   app.useGlobalFilters(new HttpExceptionFilter())
-
+  app.set('trust proxy', 1)
   app.use(
     session({
       secret: process.env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       cookie: {
-        sameSite: 'lax',
+        sameSite: 'none',
         httpOnly: true,
-        secure: false,
+        secure: true,
         maxAge: 3600000,
       },
     }),
