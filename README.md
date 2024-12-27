@@ -12,7 +12,12 @@
 
 - Лаб 1 (Виконано)
 - Лаб 2
-  - Файли [eslinterc](https://github.com/DreammyOleksandr/nodebook-server/blob/main/.eslintrc.js) [prettierrc](https://github.com/DreammyOleksandr/nodebook-server/blob/main/.prettierrc)
+  - Файли
+    - [eslinterc](https://github.com/DreammyOleksandr/nodebook-server/blob/main/.eslintrc.js)
+    - [prettierrc](https://github.com/DreammyOleksandr/nodebook-server/blob/main/.prettierrc)
+    - [commit-msg](https://github.com/DreammyOleksandr/nodebook-server/blob/main/.husky/commit-msg)
+    - [pre-push](https://github.com/DreammyOleksandr/nodebook-server/blob/main/.husky/pre-push)
+    - [pre-commit](https://github.com/DreammyOleksandr/nodebook-server/blob/main/.husky/pre-commit)
 - Лаб 3 (Структура застосунку описана в діаграмі компонентів вище)
 - Лаб 4/5 (Основні сценарії були імплементовані успішно з моковими даними (не пушились до Github). Зараз ж застосунок працює з підключеною до нього бд Mongo)
 - Лаб 6
