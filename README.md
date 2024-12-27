@@ -22,6 +22,7 @@
  - Лаб 7
    - [Сторінка CI](https://github.com/DreammyOleksandr/nodebook-server/actions)
    - Налаштований [.yml](https://github.com/DreammyOleksandr/nodebook-server/blob/main/.github/workflows/nestjs.yml)
+   - Сервіс доступний з інтернету за [посиланням](https://nodebook-b4axckeya0abe4aq.germanywestcentral-01.azurewebsites.net/swagger)
 - Лаб 8/9
   - Модуль [message](https://github.com/DreammyOleksandr/nodebook-server/tree/main/libs/message) був винесений в окрему бібліотеку та відрефакторений.
   - Увесь проєкт початково писався на TS.
