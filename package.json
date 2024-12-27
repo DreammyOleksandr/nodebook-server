@@ -26,6 +26,8 @@
   },
   "dependencies": {
     "@azure/functions": "^1.0.3",
+    "@commitlint/cli": "^19.6.1",
+    "@commitlint/config-conventional": "^19.6.0",
     "@dreammy/message": "file:libs/message",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.3.0",
