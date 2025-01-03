@@ -41,6 +41,11 @@ export class BooksController {
     return this.booksService.create(createBookRequest)
   }
 
+  @Get('/test')
+  Test(): string {
+    return 'Test endpoint to check CD'
+  }
+
   @Get()
   @SwaggerGet('Get all Books', [BooksResponse])
   async findAll(): Promise<Book[]> {

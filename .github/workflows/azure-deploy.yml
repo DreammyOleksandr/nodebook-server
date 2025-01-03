@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  build-test-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,7 +35,6 @@ jobs:
       - name: Run tests
         run: npm test
 
-
       - name: Run e2e tests
         env:
           PORT: ${{ secrets.PORT }}
@@ -51,7 +50,7 @@ jobs:
           EMAIL_SERVICE: ${{ secrets.EMAIL_SERVICE }}
           EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
         run: npm run test:e2e
-        
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
