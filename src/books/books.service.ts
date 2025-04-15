@@ -11,11 +11,11 @@ import {
   CreateBookRequest,
   UpdateBookRequest,
 } from '../requests/books.requests'
-import { SearchContext } from 'src/search-strategy/search.context'
-import { NameSearchStrategy } from 'src/search-strategy/books/search-name.strategy'
-import { AuthorSearchStrategy } from 'src/search-strategy/books/search-author.strategy'
-import { PageQuantitySearchStrategy } from 'src/search-strategy/books/search-page-quantity.strategy'
-import { RatingSearchStrategy } from 'src/search-strategy/books/search-rating.strategy'
+import { SearchContext } from '../search-strategy/search.context'
+import { NameSearchStrategy } from '../search-strategy/books/search-name.strategy'
+import { AuthorSearchStrategy } from '../search-strategy/books/search-author.strategy'
+import { PageQuantitySearchStrategy } from '../search-strategy/books/search-page-quantity.strategy'
+import { RatingSearchStrategy } from '../search-strategy/books/search-rating.strategy'
 
 @Injectable()
 export class BooksService {

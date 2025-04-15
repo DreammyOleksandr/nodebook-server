@@ -3,7 +3,7 @@ import { BooksService } from './books.service'
 import { BooksController } from './books.controller'
 import { MongooseModule } from '@nestjs/mongoose'
 import { BookSchema } from './models/book.model'
-import { SearchContext } from 'src/search-strategy/search.context'
+import { SearchContext } from '../search-strategy/search.context'
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: 'book', schema: BookSchema }])],
