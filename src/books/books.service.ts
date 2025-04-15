@@ -11,11 +11,18 @@ import {
   CreateBookRequest,
   UpdateBookRequest,
 } from '../requests/books.requests'
-import { log } from 'console'
+import { SearchContext } from 'src/search-strategy/search.context'
+import { NameSearchStrategy } from 'src/search-strategy/books/search-name.strategy'
+import { AuthorSearchStrategy } from 'src/search-strategy/books/search-author.strategy'
+import { PageQuantitySearchStrategy } from 'src/search-strategy/books/search-page-quantity.strategy'
+import { RatingSearchStrategy } from 'src/search-strategy/books/search-rating.strategy'
 
 @Injectable()
 export class BooksService {
-  constructor(@InjectModel('book') private bookModel: Model<Book>) {}
+  constructor(
+    @InjectModel('book') private bookModel: Model<Book>,
+    private searchContext: SearchContext,
+  ) {}
 
   async create(createBookRequest: CreateBookRequest): Promise<Book> {
     const existingBook = await this.bookModel.findOne({
@@ -32,6 +39,14 @@ export class BooksService {
     return newBook
   }
 
+  private async populateBook(bookQuery: any): Promise<Book[]> {
+    return bookQuery
+      .populate('categoryId')
+      .populate('comments.userId', 'username email')
+      .populate('reviews.userId', 'username email')
+      .exec()
+  }
+
   async findAll(): Promise<Book[]> {
     return await this.bookModel
       .find()
@@ -40,18 +55,34 @@ export class BooksService {
       .populate('reviews.userId', 'username email')
   }
 
-  async findByName(name: string): Promise<Book[]> {
-    if (!name || name.trim() === '') {
-      throw new BadRequestException('Name query cannot be empty')
+  async searchBooks(params: {
+    name?: string
+    author?: string
+    minPages?: number
+    maxPages?: number
+    minRating?: number
+    maxRating?: number
+  }): Promise<Book[]> {
+    this.searchContext = new SearchContext()
+
+    if (params.name) {
+      this.searchContext.addStrategy(new NameSearchStrategy())
     }
 
-    return await this.bookModel
-      .find({
-        name: { $regex: name, $options: 'i' },
-      })
-      .populate('categoryId')
-      .populate('comments.userId', 'username email')
-      .populate('reviews.userId', 'username email')
+    if (params.author) {
+      this.searchContext.addStrategy(new AuthorSearchStrategy())
+    }
+
+    if (params.minPages !== undefined || params.maxPages !== undefined) {
+      this.searchContext.addStrategy(new PageQuantitySearchStrategy())
+    }
+
+    if (params.minRating !== undefined || params.maxRating !== undefined) {
+      this.searchContext.addStrategy(new RatingSearchStrategy())
+    }
+
+    const query = this.searchContext.buildQuery(params)
+    return this.populateBook(this.bookModel.find(query))
   }
 
   async findOne(id: string): Promise<Book> {
@@ -59,11 +90,7 @@ export class BooksService {
       throw new BadRequestException('Invalid ID format')
     }
 
-    const book = await this.bookModel
-      .findById(id)
-      .populate('categoryId')
-      .populate('comments.userId', 'username email')
-      .populate('reviews.userId', 'username email')
+    const book = await this.populateBook(this.bookModel.findById(id))[0]
 
     if (!book) {
       throw new NotFoundException(`Book with ID ${id} not found`)
@@ -195,11 +222,9 @@ export class BooksService {
   }
 
   async getLikedBooks(userId: string): Promise<Book[]> {
-    log('everything is aight 1')
     if (!isValidObjectId(userId)) {
       throw new BadRequestException('Invalid User ID format')
     }
-    log('everything is aight 2')
 
     const books = await this.bookModel
       .find({ likes: userId })

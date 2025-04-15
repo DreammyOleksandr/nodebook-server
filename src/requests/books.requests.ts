@@ -1,12 +1,77 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import {
   IsNotEmpty,
   IsNumber,
   IsString,
   Min,
   IsOptional,
+  Max,
 } from 'class-validator'
 import { Types } from 'mongoose'
+
+export class SearchBooksRequest {
+  @ApiPropertyOptional({
+    description: 'Filter by book name (case insensitive)',
+    example: 'Harry Potter',
+  })
+  @IsOptional()
+  @IsString()
+  name?: string
+
+  @ApiPropertyOptional({
+    description: 'Filter by author name (case insensitive)',
+    example: 'J.K. Rowling',
+  })
+  @IsOptional()
+  @IsString()
+  author?: string
+
+  @ApiPropertyOptional({
+    description: 'Minimum number of pages',
+    example: 100,
+    type: Number,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  minPages?: number
+
+  @ApiPropertyOptional({
+    description: 'Maximum number of pages',
+    example: 500,
+    type: Number,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  maxPages?: number
+
+  @ApiPropertyOptional({
+    description: 'Minimum average rating (1-5)',
+    example: 4,
+    type: Number,
+    minimum: 1,
+    maximum: 5,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  @Max(5)
+  minRating?: number
+
+  @ApiPropertyOptional({
+    description: 'Maximum average rating (1-5)',
+    example: 5,
+    type: Number,
+    minimum: 1,
+    maximum: 5,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  @Max(5)
+  maxRating?: number
+}
 
 export class CreateBookRequest {
   @ApiProperty({
