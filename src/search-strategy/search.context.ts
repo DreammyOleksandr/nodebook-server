@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { FilterQuery } from 'mongoose'
-import { Book } from 'src/books/models/book.model'
+import { Book } from '../books/models/book.model'
 import { SearchStrategy } from './search-strategy.interface'
 
 @Injectable()
