@@ -14,6 +14,7 @@ import { Book } from './models/book.model'
 import { ApiTags } from '@nestjs/swagger'
 import {
   CreateBookRequest,
+  SearchBooksRequest,
   UpdateBookRequest,
 } from '../requests/books.requests'
 import { BooksService } from './books.service'
@@ -47,15 +48,24 @@ export class BooksController {
   }
 
   @Get()
-  @SwaggerGet('Get all Books', [BooksResponse])
-  async findAll(): Promise<Book[]> {
-    return this.booksService.findAll()
-  }
+  @SwaggerGet('Get all Books or search books', [BooksResponse])
+  async findRange(@Query() searchParams: SearchBooksRequest): Promise<Book[]> {
+    const searchCriteria = {
+      name: searchParams.name || undefined,
+      author: searchParams.author || undefined,
+      minPages: searchParams.minPages,
+      maxPages: searchParams.maxPages,
+      minRating: searchParams.minRating,
+      maxRating: searchParams.maxRating,
+    }
 
-  @Get('search/:name')
-  @SwaggerGet('Get Books by name', [BooksResponse])
-  async findByName(@Query('name') name: string): Promise<Book[]> {
-    return this.booksService.findByName(name)
+    const filteredCriteria = Object.fromEntries(
+      Object.entries(searchCriteria).filter((v) => v !== undefined),
+    )
+
+    return Object.keys(filteredCriteria).length > 0
+      ? this.booksService.searchBooks(filteredCriteria)
+      : this.booksService.findAll()
   }
 
   @Get('/liked')
