@@ -1,4 +1,3 @@
-// search-strategies/author-search.strategy.ts
 import { FilterQuery } from 'mongoose'
 import { Book } from 'src/books/models/book.model'
 import { SearchStrategy } from '../search-strategy.interface'
