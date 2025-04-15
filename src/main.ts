@@ -10,6 +10,8 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
   app.setGlobalPrefix('api')
   app.useGlobalFilters(new HttpExceptionFilter())
+
+  const isProduction = process.env.NODE_ENV === 'production'
   app.set('trust proxy', 1)
   app.use(
     session({
@@ -17,9 +19,9 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        sameSite: 'none',
+        sameSite: isProduction ? 'none' : 'lax',
         httpOnly: true,
-        secure: true,
+        secure: isProduction,
         maxAge: 3600000,
       },
     }),
