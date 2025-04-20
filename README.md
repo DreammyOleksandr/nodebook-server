@@ -4,6 +4,10 @@
 
 [**Global Exception Filter (Handler) Pattern**](./docs/global-exception-filter-pattern.md)🌪️
 
+Паттерни реалізовані функціональністю JS/Nest.js (Потребують лише імплементації):
+
+[**Singleton**](./docs/singleton-pattern.md)☝️
+
 # Nodebook
 
 ## 📝 Опис проєкту
