@@ -2,6 +2,8 @@
 
 ## Патерни, імплементовані в проєкті
 
+[**Command Pattern**](./docs/command-pattern.md)🔉
+
 [**Global Exception Filter (Handler) Pattern**](./docs/global-exception-filter-pattern.md)🌪️
 
 Паттерни реалізовані функціональністю JS/Nest.js (Потребують лише імплементації):
