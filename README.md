@@ -1,46 +1,23 @@
+# Nodebook (Patterns implementation for T. Shemsedinov course)
+
+## Патерни, імплементовані в проєкті
+
+[**Global Exception Filter (Handler) Pattern**](./docs/global-exception-filter-pattern.md)🌪️
+
 # Nodebook
 
 ## 📝 Опис проєкту
 
 Цей проєкт — це книжковий форум, який дозволяє користувачам переглянути книги з їх описом та відгуками від інших користувачів, і можливість вподобати улюблені книги.
 
-## Діаграма компонентів серверного застосунку:
+# Робили проєкт у команді ( ІМ-22 ):
 
-![Alt text](./graph.png)
-
-# Робили проєкт у команді:
-
-- Бонадренко Олександр, ІМ-22: Back-end
-- Титянюк Артем, ІМ-22: Front-end
-- Сачко Максим, ІМ-22: Front-end
-
-Вирішили робити у різних репозиторіях Front-end та Back-end
+- Бондаренко Олександр, Back-end
+- Балахон Михайло, Back-end
+- Титянюк Артем, Front-end
+- Сачко Максим, Front-end
 
 Посилання на [Front-end](https://github.com/tytianiuk/nodebook-web)
-
-# Виконані лабораторні роботи:
-
-- Лаб 1 (Виконано)
-- Лаб 2
-  - Файли
-    - [eslinterc](https://github.com/DreammyOleksandr/nodebook-server/blob/main/.eslintrc.js)
-    - [prettierrc](https://github.com/DreammyOleksandr/nodebook-server/blob/main/.prettierrc)
-    - [commit-msg](https://github.com/DreammyOleksandr/nodebook-server/blob/main/.husky/commit-msg)
-    - [pre-push](https://github.com/DreammyOleksandr/nodebook-server/blob/main/.husky/pre-push)
-    - [pre-commit](https://github.com/DreammyOleksandr/nodebook-server/blob/main/.husky/pre-commit)
-- Лаб 3 (Структура застосунку описана в діаграмі компонентів вище)
-- Лаб 4/5 (Основні сценарії були імплементовані успішно з моковими даними (не пушились до Github). Зараз ж застосунок працює з підключеною до нього бд Mongo)
-- Лаб 6
-  - Модуль, покритий UNIT-тестами: [categories.controller](https://github.com/DreammyOleksandr/nodebook-server/blob/main/src/categories/categories.controller.spec.ts) [categories.service](https://github.com/DreammyOleksandr/nodebook-server/blob/main/src/categories/categories.service.spec.ts)
-  - Інші файли UNIT-тестів: [users.service](https://github.com/DreammyOleksandr/nodebook-server/blob/main/src/users/users.service.spec.ts) [users.controller](https://github.com/DreammyOleksandr/nodebook-server/blob/main/src/users/users.controller.spec.ts)
-  - E2E тестування: [app.e2e](https://github.com/DreammyOleksandr/nodebook-server/blob/main/test/app.e2e-spec.ts)
- - Лаб 7
-   - [Сторінка CI](https://github.com/DreammyOleksandr/nodebook-server/actions)
-   - Налаштований [.yml](https://github.com/DreammyOleksandr/nodebook-server/blob/main/.github/workflows/nestjs.yml)
-   - Сервіс доступний з інтернету за [посиланням](https://nodebook-b4axckeya0abe4aq.germanywestcentral-01.azurewebsites.net/swagger)
-- Лаб 8/9
-  - Модуль [message](https://github.com/DreammyOleksandr/nodebook-server/tree/main/libs/message) був винесений в окрему бібліотеку та відрефакторений.
-  - Увесь проєкт початково писався на TS.
 
 ### 👨‍💻 Основні функції:
 
