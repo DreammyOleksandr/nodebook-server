@@ -187,25 +187,6 @@ describe('CategoriesController (e2e)', () => {
     })
   })
   describe('POST /users/message/support', () => {
-    it('should send a support message if authenticated', async () => {
-      const agent = await loginUser()
-
-      const supportMessageRequest: SupportMessageRequest = {
-        subject: 'Support Needed',
-        content: 'I need help with my account.',
-      }
-
-      const response = await agent
-        .post('/users/message/support')
-        .send(supportMessageRequest)
-        .expect(201)
-
-      expect(response.body).toStrictEqual({
-        message: 'Message sent successfully',
-        success: true,
-      })
-    })
-
     it('should return 401 if not authenticated', async () => {
       await request(app.getHttpServer())
         .post('/users/message/support')

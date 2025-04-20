@@ -6,12 +6,12 @@ import {
   CreateCategoryRequest,
   UpdateCategoryRequest,
 } from '../requests/categories.requests'
-import { CreateCategoryCommand } from 'src/commands/categories/create.command'
-import { FindAllCategoriesCommand } from 'src/commands/categories/find-all.command'
-import { FindByNameCategoryCommand } from 'src/commands/categories/find-by-name.command'
-import { FindOneCategoryCommand } from 'src/commands/categories/find-one.command'
-import { RemoveCategoryCommand } from 'src/commands/categories/remove.command'
-import { UpdateCategoryCommand } from 'src/commands/categories/update.command'
+import { CreateCategoryCommand } from '../commands/categories/create.command'
+import { FindAllCategoriesCommand } from '../commands/categories/find-all.command'
+import { FindByNameCategoryCommand } from '../commands/categories/find-by-name.command'
+import { FindOneCategoryCommand } from '../commands/categories/find-one.command'
+import { RemoveCategoryCommand } from '../commands/categories/remove.command'
+import { UpdateCategoryCommand } from '../commands/categories/update.command'
 
 @Injectable()
 export class CategoriesService {
