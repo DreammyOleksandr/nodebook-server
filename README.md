@@ -3,8 +3,8 @@
 ## Патерни, імплементовані в проєкті
 
 [**Command Pattern**](./docs/command-pattern.md)🔉
-
-[**Global Exception Filter (Handler) Pattern**](./docs/global-exception-filter-pattern.md)🌪️
+[**Strategy**](./docs/strategy-pattern.md)♟️ імплементований для пошуку книжок за різними аргументами\
+[**Global Exception Filter (Handler)**](./docs/global-exception-filter-pattern.md)🌪️
 
 Паттерни реалізовані функціональністю JS/Nest.js (Потребують лише імплементації):
 
