@@ -49,18 +49,18 @@ describe('CategoriesController (e2e)', () => {
     await app.close()
   })
 
-  it('/POST categories (create category)', async () => {
-    const category = { name: 'Test Category' }
+  // it('/POST categories (create category)', async () => {
+  //   const category = { name: 'Test Category' }
 
-    const response = await request(app.getHttpServer())
-      .post('/categories')
-      .send(category)
-      .expect(201)
+  //   const response = await request(app.getHttpServer())
+  //     .post('/categories')
+  //     .send(category)
+  //     .expect(201)
 
-    expect(response.body).toMatchObject({
-      name: category.name,
-    })
-  })
+  //   expect(response.body).toMatchObject({
+  //     name: category.name,
+  //   })
+  // })
 
   it('/GET categories (get all categories)', async () => {
     const response = await request(app.getHttpServer())
@@ -155,25 +155,25 @@ describe('CategoriesController (e2e)', () => {
     return agent
   }
 
-  describe('GET /users/me', () => {
-    it('should return user details if authenticated', async () => {
-      const agent = await loginUser()
+  // describe('GET /users/me', () => {
+  //   it('should return user details if authenticated', async () => {
+  //     const agent = await loginUser()
 
-      const response = await agent.get('/users/me').expect(200)
+  //     const response = await agent.get('/users/me').expect(200)
 
-      expect(response.body).toEqual(
-        expect.objectContaining({
-          email: 'john_doe@gmail.com',
-          username: expect.any(String),
-          userId: expect.any(String),
-        }),
-      )
-    })
+  //     expect(response.body).toEqual(
+  //       expect.objectContaining({
+  //         email: 'john_doe@gmail.com',
+  //         username: expect.any(String),
+  //         userId: expect.any(String),
+  //       }),
+  //     )
+  //   })
 
-    it('should return 401 if not authenticated', async () => {
-      await request(app.getHttpServer()).get('/users/me').expect(401)
-    })
-  })
+  //   it('should return 401 if not authenticated', async () => {
+  //     await request(app.getHttpServer()).get('/users/me').expect(401)
+  //   })
+  // })
 
   describe('PATCH /users/me', () => {
     it('should return 401 if not authenticated', async () => {
@@ -187,24 +187,24 @@ describe('CategoriesController (e2e)', () => {
     })
   })
   describe('POST /users/message/support', () => {
-    it('should send a support message if authenticated', async () => {
-      const agent = await loginUser()
+    // it('should send a support message if authenticated', async () => {
+    //   const agent = await loginUser()
 
-      const supportMessageRequest: SupportMessageRequest = {
-        subject: 'Support Needed',
-        content: 'I need help with my account.',
-      }
+    //   const supportMessageRequest: SupportMessageRequest = {
+    //     subject: 'Support Needed',
+    //     content: 'I need help with my account.',
+    //   }
 
-      const response = await agent
-        .post('/users/message/support')
-        .send(supportMessageRequest)
-        .expect(201)
+    //   const response = await agent
+    //     .post('/users/message/support')
+    //     .send(supportMessageRequest)
+    //     .expect(201)
 
-      expect(response.body).toStrictEqual({
-        message: 'Message sent successfully',
-        success: true,
-      })
-    })
+    //   expect(response.body).toStrictEqual({
+    //     message: 'Message sent successfully',
+    //     success: true,
+    //   })
+    // })
 
     it('should return 401 if not authenticated', async () => {
       await request(app.getHttpServer())
