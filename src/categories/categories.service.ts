@@ -1,15 +1,17 @@
-import {
-  Injectable,
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model, isValidObjectId } from 'mongoose'
+import { Model } from 'mongoose'
 import { Category } from './models/category.model'
 import {
   CreateCategoryRequest,
   UpdateCategoryRequest,
 } from '../requests/categories.requests'
+import { CreateCategoryCommand } from '../commands/categories/create.command'
+import { FindAllCategoriesCommand } from '../commands/categories/find-all.command'
+import { FindByNameCategoryCommand } from '../commands/categories/find-by-name.command'
+import { FindOneCategoryCommand } from '../commands/categories/find-one.command'
+import { RemoveCategoryCommand } from '../commands/categories/remove.command'
+import { UpdateCategoryCommand } from '../commands/categories/update.command'
 
 @Injectable()
 export class CategoriesService {
@@ -17,64 +19,27 @@ export class CategoriesService {
     @InjectModel('category') private categoryModel: Model<Category>,
   ) {}
 
-  async create(
-    createCategoryRequest: CreateCategoryRequest,
-  ): Promise<Category> {
-    const newCategory = new this.categoryModel(createCategoryRequest)
-    return await newCategory.save()
+  async create(request: CreateCategoryRequest): Promise<Category> {
+    return new CreateCategoryCommand(this.categoryModel, request).execute()
   }
 
   async findAll(): Promise<Category[]> {
-    return await this.categoryModel.find()
+    return new FindAllCategoriesCommand(this.categoryModel).execute()
   }
 
   async findOne(id: string): Promise<Category> {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Invalid ID format')
-    }
-
-    const category = await this.categoryModel.findById(id)
-    if (!category) {
-      throw new NotFoundException(`Category with ID ${id} not found`)
-    }
-    return category
+    return new FindOneCategoryCommand(this.categoryModel, id).execute()
   }
 
   async findByName(name: string): Promise<Category[]> {
-    return await this.categoryModel.find({
-      name: { $regex: name, $options: 'i' },
-    })
+    return new FindByNameCategoryCommand(this.categoryModel, name).execute()
   }
 
-  async update(
-    id: string,
-    updateCategoryRequest: UpdateCategoryRequest,
-  ): Promise<Category> {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Invalid ID format')
-    }
-
-    const updatedCategory = await this.categoryModel.findByIdAndUpdate(
-      id,
-      updateCategoryRequest,
-      { new: true },
-    )
-    if (!updatedCategory) {
-      throw new NotFoundException(`Category with ID ${id} not found`)
-    }
-    return updatedCategory
+  async update(id: string, request: UpdateCategoryRequest): Promise<Category> {
+    return new UpdateCategoryCommand(this.categoryModel, id, request).execute()
   }
 
   async remove(id: string): Promise<Category> {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Invalid ID format')
-    }
-
-    const deletedCategory = await this.categoryModel.findByIdAndDelete(id)
-    if (!deletedCategory) {
-      throw new NotFoundException(`Category with ID ${id} not found`)
-    }
-
-    return deletedCategory
+    return new RemoveCategoryCommand(this.categoryModel, id).execute()
   }
 }
