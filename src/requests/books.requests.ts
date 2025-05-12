@@ -47,28 +47,28 @@ export class SearchBooksRequest {
   maxPages?: number
 
   @ApiPropertyOptional({
-    description: 'Minimum average rating (1-5)',
+    description: 'Minimum average rating (0-5)',
     example: 4,
     type: Number,
-    minimum: 1,
+    minimum: 0,
     maximum: 5,
   })
   @IsOptional()
   @IsNumber()
-  @Min(1)
+  @Min(0)
   @Max(5)
   minRating?: number
 
   @ApiPropertyOptional({
-    description: 'Maximum average rating (1-5)',
+    description: 'Maximum average rating (0-5)',
     example: 5,
     type: Number,
-    minimum: 1,
+    minimum: 0,
     maximum: 5,
   })
   @IsOptional()
   @IsNumber()
-  @Min(1)
+  @Min(0)
   @Max(5)
   maxRating?: number
 }

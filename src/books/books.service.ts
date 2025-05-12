@@ -90,7 +90,11 @@ export class BooksService {
       throw new BadRequestException('Invalid ID format')
     }
 
-    const book = await this.populateBook(this.bookModel.findById(id))[0]
+    const book = await this.bookModel
+      .findById(id)
+      .populate('categoryId')
+      .populate('comments.userId', 'username email')
+      .populate('reviews.userId', 'username email')
 
     if (!book) {
       throw new NotFoundException(`Book with ID ${id} not found`)

@@ -28,7 +28,7 @@ export const BookSchema = new Schema<Book>({
   reviews: [
     {
       userId: { type: Schema.Types.ObjectId, ref: 'user', required: true },
-      rating: { type: Number, required: true, min: 1, max: 5 },
+      rating: { type: Number, required: true, min: 0, max: 5 },
       comment: { type: String, required: false },
     },
   ],
