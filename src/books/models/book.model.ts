@@ -34,3 +34,12 @@ export const BookSchema = new Schema<Book>({
   ],
   likes: [{ type: Schema.Types.ObjectId, ref: 'user' }],
 })
+
+export type BookSearchCriteria = {
+  name?: string
+  author?: string
+  minPages?: number
+  maxPages?: number
+  minRating?: number
+  maxRating?: number
+}

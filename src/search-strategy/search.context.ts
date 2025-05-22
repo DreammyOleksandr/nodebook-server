@@ -7,8 +7,8 @@ import { SearchStrategy } from './search-strategy.interface'
 export class SearchContext {
   private strategies: SearchStrategy[] = []
 
-  addStrategy(strategy: SearchStrategy): void {
-    this.strategies.push(strategy)
+  addStrategies(strategies: SearchStrategy[]): void {
+    this.strategies.push(...strategies)
   }
 
   buildQuery(params: any): FilterQuery<Book> {
