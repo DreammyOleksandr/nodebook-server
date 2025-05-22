@@ -6,16 +6,13 @@ import {
 } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model, Types, isValidObjectId } from 'mongoose'
-import { Book } from './models/book.model'
+import { Book, BookSearchCriteria } from './models/book.model'
 import {
   CreateBookRequest,
   UpdateBookRequest,
 } from '../requests/books.requests'
 import { SearchContext } from '../search-strategy/search.context'
-import { NameSearchStrategy } from '../search-strategy/books/search-name.strategy'
-import { AuthorSearchStrategy } from '../search-strategy/books/search-author.strategy'
-import { PageQuantitySearchStrategy } from '../search-strategy/books/search-page-quantity.strategy'
-import { RatingSearchStrategy } from '../search-strategy/books/search-rating.strategy'
+import { BookSearchStrategyFactory } from './components/books.searchStrategyFactory'
 
 @Injectable()
 export class BooksService {
@@ -55,33 +52,11 @@ export class BooksService {
       .populate('reviews.userId', 'username email')
   }
 
-  async searchBooks(params: {
-    name?: string
-    author?: string
-    minPages?: number
-    maxPages?: number
-    minRating?: number
-    maxRating?: number
-  }): Promise<Book[]> {
+  async searchBooks(criteria: BookSearchCriteria): Promise<Book[]> {
     this.searchContext = new SearchContext()
-
-    if (params.name) {
-      this.searchContext.addStrategy(new NameSearchStrategy())
-    }
-
-    if (params.author) {
-      this.searchContext.addStrategy(new AuthorSearchStrategy())
-    }
-
-    if (params.minPages !== undefined || params.maxPages !== undefined) {
-      this.searchContext.addStrategy(new PageQuantitySearchStrategy())
-    }
-
-    if (params.minRating !== undefined || params.maxRating !== undefined) {
-      this.searchContext.addStrategy(new RatingSearchStrategy())
-    }
-
-    const query = this.searchContext.buildQuery(params)
+    const strategies = BookSearchStrategyFactory.createStrategies(criteria)
+    this.searchContext.addStrategies(strategies)
+    const query = this.searchContext.buildQuery(criteria)
     return this.populateBook(this.bookModel.find(query))
   }
 
