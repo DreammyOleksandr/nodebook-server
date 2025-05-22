@@ -12,7 +12,7 @@ import {
   UpdateBookRequest,
 } from '../requests/books.requests'
 import { SearchContext } from '../search-strategy/search.context'
-import { BookSearchStrategyFactory } from './components/books.searchStrategyFactory'
+import { BookSearchStrategiesFactory } from './components/books.searchStrategiesFactory'
 
 @Injectable()
 export class BooksService {
@@ -54,7 +54,7 @@ export class BooksService {
 
   async searchBooks(criteria: BookSearchCriteria): Promise<Book[]> {
     this.searchContext = new SearchContext()
-    const strategies = BookSearchStrategyFactory.createStrategies(criteria)
+    const strategies = BookSearchStrategiesFactory.createStrategies(criteria)
     this.searchContext.addStrategies(strategies)
     const query = this.searchContext.buildQuery(criteria)
     return this.populateBook(this.bookModel.find(query))

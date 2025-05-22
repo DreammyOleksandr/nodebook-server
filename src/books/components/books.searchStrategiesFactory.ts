@@ -5,7 +5,7 @@ import { PageQuantitySearchStrategy } from '../../search-strategy/books/search-p
 import { RatingSearchStrategy } from '../../search-strategy/books/search-rating.strategy'
 import { SearchStrategy } from '../../search-strategy/search-strategy.interface'
 
-export class BookSearchStrategyFactory {
+export class BookSearchStrategiesFactory {
   static createStrategies(criteria: BookSearchCriteria): SearchStrategy[] {
     const strategies: SearchStrategy[] = []
 

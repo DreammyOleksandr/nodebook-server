@@ -1,4 +1,4 @@
-# **Factory Pattern**🏭 | [BookSearchStrategyFactory](https://github.com/DreammyOleksandr/nodebook-server/tree/main/src/books/components/books.searchStrategyFactory.ts)
+# **Factory Pattern**🏭 | [BookSearchStrategiesFactory](https://github.com/DreammyOleksandr/nodebook-server/tree/main/src/books/components/books.searchStrategiesFactory.ts)
 
 ## Контекст проблеми 📝
 
@@ -15,7 +15,7 @@ Factory Pattern допомагає:
 
 ## Опис реалізації ✅
 
-- **BookSearchStrategyFactory**: статичний клас, який на основі критеріїв пошуку створює масив потрібних стратегій.
+- **BookSearchStrategiesFactory**: статичний клас, який на основі критеріїв пошуку створює масив потрібних стратегій.
 - **SearchStrategy**: інтерфейс/абстрактний клас для всіх стратегій пошуку (наприклад, NameSearchStrategy, AuthorSearchStrategy, PageQuantitySearchStrategy, RatingSearchStrategy).
 - **SearchContext**: клас, що агрегує стратегії та будує фінальний запит до бази даних.
 - **BookService**: використовує фабрику для отримання потрібних стратегій та делегує їм побудову запиту.
@@ -23,8 +23,8 @@ Factory Pattern допомагає:
 ## Кодова реалізація 💻
 
 ```ts
-// BookSearchStrategyFactory.ts
-export class BookSearchStrategyFactory {
+// BookSearchStrategiesFactory.ts
+export class BookSearchStrategiesFactory {
   static createStrategies(criteria: BookSearchCriteria): SearchStrategy[] {
     const strategies: SearchStrategy[] = []
 
@@ -50,7 +50,7 @@ export class BookSearchStrategyFactory {
 // BookService.ts (фрагмент)
 async searchBooks(criteria: BookSearchCriteria): Promise {
   this.searchContext = new SearchContext()
-  const strategies = BookSearchStrategyFactory.createStrategies(criteria)
+  const strategies = BookSearchStrategiesFactory.createStrategies(criteria)
   this.searchContext.addStrategies(strategies)
   const query = this.searchContext.buildQuery(criteria)
   return this.populateBook(this.bookModel.find(query))
@@ -60,7 +60,7 @@ async searchBooks(criteria: BookSearchCriteria): Promise {
 ## Як це працює? 🛠️
 
 1. **Користувач вводить критерії пошуку** (наприклад, ім'я автора та мінімальний рейтинг).
-2. **BookSearchStrategyFactory** аналізує критерії та створює відповідні стратегії пошуку.
+2. **BookSearchStrategiesFactory** аналізує критерії та створює відповідні стратегії пошуку.
 3. **SearchContext** отримує ці стратегії та будує фінальний запит до бази даних, комбінуючи логіку кожної стратегії.
 4. **BookService** отримує результати пошуку, не знаючи деталей реалізації кожної стратегії.
 
