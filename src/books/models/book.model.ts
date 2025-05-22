@@ -43,3 +43,44 @@ export type BookSearchCriteria = {
   minRating?: number
   maxRating?: number
 }
+
+export class BookSearchCriteriaBuilder {
+  private criteria: BookSearchCriteria = {}
+
+  setName(name?: string): this {
+    if (name) this.criteria.name = name
+    return this
+  }
+
+  setAuthor(author?: string): this {
+    if (author) this.criteria.author = author
+    return this
+  }
+
+  setMinPages(minPages?: number): this {
+    if (minPages !== undefined) this.criteria.minPages = minPages
+    return this
+  }
+
+  setMaxPages(maxPages?: number): this {
+    if (maxPages !== undefined) this.criteria.maxPages = maxPages
+    return this
+  }
+
+  setMinRating(minRating?: number): this {
+    if (minRating !== undefined) this.criteria.minRating = minRating
+    return this
+  }
+
+  setMaxRating(maxRating?: number): this {
+    if (maxRating !== undefined) this.criteria.maxRating = maxRating
+    return this
+  }
+
+  build(): BookSearchCriteria {
+    const criteria = { ...this.criteria }
+    return Object.fromEntries(
+      Object.entries(criteria).filter((v) => v !== undefined),
+    )
+  }
+}
