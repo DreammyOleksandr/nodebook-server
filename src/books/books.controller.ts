@@ -10,7 +10,7 @@ import {
   UseGuards,
   Patch,
 } from '@nestjs/common'
-import { Book, BookSearchCriteria } from './models/book.model'
+import { Book, BookSearchCriteriaBuilder } from './models/book.model'
 import { ApiTags } from '@nestjs/swagger'
 import {
   CreateBookRequest,
@@ -50,21 +50,17 @@ export class BooksController {
   @Get()
   @SwaggerGet('Get all Books or search books', [BooksResponse])
   async findRange(@Query() searchParams: SearchBooksRequest): Promise<Book[]> {
-    const searchCriteria: BookSearchCriteria = {
-      name: searchParams.name || undefined,
-      author: searchParams.author || undefined,
-      minPages: searchParams.minPages,
-      maxPages: searchParams.maxPages,
-      minRating: searchParams.minRating,
-      maxRating: searchParams.maxRating,
-    }
+    const searchCriteria = new BookSearchCriteriaBuilder()
+      .setName(searchParams.name)
+      .setAuthor(searchParams.author)
+      .setMinPages(searchParams.minPages)
+      .setMaxPages(searchParams.maxPages)
+      .setMinRating(searchParams.minRating)
+      .setMaxRating(searchParams.maxRating)
+      .build()
 
-    const filteredCriteria = Object.fromEntries(
-      Object.entries(searchCriteria).filter((v) => v !== undefined),
-    )
-
-    return Object.keys(filteredCriteria).length > 0
-      ? this.booksService.searchBooks(filteredCriteria)
+    return Object.keys(searchCriteria).length > 0
+      ? this.booksService.searchBooks(searchCriteria)
       : this.booksService.findAll()
   }
 
