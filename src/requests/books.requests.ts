@@ -112,6 +112,58 @@ export class CreateBookRequest {
   categoryId: Types.ObjectId
 }
 
+export class AddCommentRequest {
+  @ApiProperty({
+    example: '607d1f77bcf86cd799439011',
+    description: 'The book ID',
+  })
+  @IsNotEmpty()
+  bookId: string
+
+  @ApiProperty({
+    example: '607d1f77bcf86cd799439011',
+    description: 'The user ID',
+  })
+  @IsNotEmpty()
+  userId: string
+
+  @ApiProperty({
+    example: 'Positive comment about the book',
+    description: 'The comment for the book',
+  })
+  @IsNotEmpty()
+  comment: string
+}
+
+export class AddReviewRequest {
+  @ApiProperty({
+    example: '607d1f77bcf86cd799439011',
+    description: 'The book ID',
+  })
+  @IsNotEmpty()
+  bookId: string
+
+  @ApiProperty({
+    example: '607d1f77bcf86cd799439011',
+    description: 'The user ID',
+  })
+  @IsNotEmpty()
+  userId: string
+
+  @ApiProperty({
+    example: '5',
+    description: 'The rating of the book (0-5)',
+  })
+  @IsNotEmpty()
+  rating: number
+
+  @ApiProperty({
+    example: 'Positive comment about the book',
+    description: 'The comment for the book',
+  })
+  comment: string
+}
+
 export class UpdateBookRequest {
   @IsOptional()
   @IsString()
