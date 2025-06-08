@@ -173,8 +173,11 @@ export class BooksService {
   }
 
   private calculateAverageRating = (reviews: { rating: number }[]): number => {
-    const totalRatings = reviews.reduce((sum, review) => sum + review.rating, 0)
-    return totalRatings / reviews.length
+    let totalRatings = 0
+    for (const review of reviews) {
+      totalRatings += review.rating
+    }
+    return reviews.length === 0 ? 0 : totalRatings / reviews.length
   }
 
   likeBook = async (bookId: string, userId: string): Promise<Book> => {
