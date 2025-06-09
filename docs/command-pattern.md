@@ -41,41 +41,6 @@
 ## Кодова реалізація 💻
 
 ```ts
-//categories.service.ts
-//Імпорти
-@Injectable()
-export class CategoriesService {
-  constructor(
-    @InjectModel('category') private categoryModel: Model<Category>,
-  ) {}
-
-  async create(request: CreateCategoryRequest): Promise<Category> {
-    return new CreateCategoryCommand(this.categoryModel, request).execute()
-  }
-
-  async findAll(): Promise<Category[]> {
-    return new FindAllCategoriesCommand(this.categoryModel).execute()
-  }
-
-  async findOne(id: string): Promise<Category> {
-    return new FindOneCategoryCommand(this.categoryModel, id).execute()
-  }
-
-  async findByName(name: string): Promise<Category[]> {
-    return new FindByNameCategoryCommand(this.categoryModel, name).execute()
-  }
-
-  async update(id: string, request: UpdateCategoryRequest): Promise<Category> {
-    return new UpdateCategoryCommand(this.categoryModel, id, request).execute()
-  }
-
-  async remove(id: string): Promise<Category> {
-    return new RemoveCategoryCommand(this.categoryModel, id).execute()
-  }
-}
-```
-
-```ts
 //command.interface.ts
 export interface ICommand<T> {
   execute(): Promise<T>

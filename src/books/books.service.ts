@@ -13,46 +13,95 @@ import {
 } from '../requests/books.requests'
 import { SearchContext } from '../search-strategy/search.context'
 import { BookSearchStrategyFactory } from './components/books.searchStrategyFactory'
+import { ErrorMessages } from 'src/utils/errors/error.messages'
+
+const MODEL_NAME = 'book'
+const POPULATE_FIELDS = {
+  CATEGORY: 'categoryId',
+  COMMENTS: {
+    PATH: 'comments.userId',
+    SELECT: 'username email',
+  },
+  REVIEWS: {
+    PATH: 'reviews.userId',
+    SELECT: 'username email',
+  },
+}
+
+const validateObjectId = (id: string, errorMsg: string) => {
+  if (!isValidObjectId(id)) {
+    throw new BadRequestException(errorMsg)
+  }
+}
+
+const validateRating = (rating: number) => {
+  if (rating < 0 || rating > 5) {
+    throw new BadRequestException(ErrorMessages.books.INVALID_RATING)
+  }
+}
+
+const validateExists = <T>(entity: T | null, errorMsg: string) => {
+  if (!entity) {
+    throw new NotFoundException(errorMsg)
+  }
+}
+
+const validateAlreadyLiked = (likes: Types.ObjectId[], userId: string) => {
+  if (likes.some((likeId) => likeId.toString() === userId)) {
+    throw new BadRequestException(ErrorMessages.books.ALREADY_LIKED)
+  }
+}
+
+const validateNotLiked = (likes: Types.ObjectId[], userId: string) => {
+  if (!likes.some((likeId) => likeId.toString() === userId)) {
+    throw new BadRequestException(ErrorMessages.books.NOT_LIKED)
+  }
+}
 
 @Injectable()
 export class BooksService {
   constructor(
-    @InjectModel('book') private bookModel: Model<Book>,
+    @InjectModel(MODEL_NAME) private bookModel: Model<Book>,
     private searchContext: SearchContext,
   ) {}
 
-  async create(createBookRequest: CreateBookRequest): Promise<Book> {
+  private findBookById = async (id: string): Promise<Book> => {
+    validateObjectId(id, ErrorMessages.books.INVALID_ID)
+    const book = await this.bookModel.findById(id)
+    validateExists(book, ErrorMessages.books.NOT_FOUND(id))
+    return book
+  }
+
+  private populateBook = async (bookQuery: any): Promise<Book[]> => {
+    return bookQuery
+      .populate(POPULATE_FIELDS.CATEGORY)
+      .populate(POPULATE_FIELDS.COMMENTS.PATH, POPULATE_FIELDS.COMMENTS.SELECT)
+      .populate(POPULATE_FIELDS.REVIEWS.PATH, POPULATE_FIELDS.REVIEWS.SELECT)
+      .exec()
+  }
+
+  create = async (createBookRequest: CreateBookRequest): Promise<Book> => {
     const existingBook = await this.bookModel.findOne({
       name: createBookRequest.name,
     })
     if (existingBook) {
-      throw new ConflictException('A book with this name already exists')
+      throw new ConflictException(ErrorMessages.books.EXISTS)
     }
 
     const newBook = (
-      await new this.bookModel(createBookRequest).populate('categoryId')
+      await new this.bookModel(createBookRequest).populate(
+        POPULATE_FIELDS.CATEGORY,
+      )
     ).save()
 
     return newBook
   }
 
-  private async populateBook(bookQuery: any): Promise<Book[]> {
-    return bookQuery
-      .populate('categoryId')
-      .populate('comments.userId', 'username email')
-      .populate('reviews.userId', 'username email')
-      .exec()
+  findAll = async (): Promise<Book[]> => {
+    return this.populateBook(this.bookModel.find())
   }
 
-  async findAll(): Promise<Book[]> {
-    return await this.bookModel
-      .find()
-      .populate('categoryId')
-      .populate('comments.userId', 'username email')
-      .populate('reviews.userId', 'username email')
-  }
-
-  async searchBooks(criteria: BookSearchCriteria): Promise<Book[]> {
+  searchBooks = async (criteria: BookSearchCriteria): Promise<Book[]> => {
     this.searchContext = new SearchContext()
     const strategies = BookSearchStrategyFactory.createStrategies(criteria)
     this.searchContext.addStrategies(strategies)
@@ -60,90 +109,55 @@ export class BooksService {
     return this.populateBook(this.bookModel.find(query))
   }
 
-  async findOne(id: string): Promise<Book> {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Invalid ID format')
-    }
-
+  findOne = async (id: string): Promise<Book> => {
+    validateObjectId(id, 'Invalid ID format')
     const book = await this.bookModel
       .findById(id)
-      .populate('categoryId')
-      .populate('comments.userId', 'username email')
-      .populate('reviews.userId', 'username email')
+      .populate(POPULATE_FIELDS.CATEGORY)
+      .populate(POPULATE_FIELDS.COMMENTS.PATH, POPULATE_FIELDS.COMMENTS.SELECT)
+      .populate(POPULATE_FIELDS.REVIEWS.PATH, POPULATE_FIELDS.REVIEWS.SELECT)
 
-    if (!book) {
-      throw new NotFoundException(`Book with ID ${id} not found`)
-    }
+    validateExists(book, `Book with ID ${id} not found`)
     return book
   }
 
-  async update(
+  update = async (
     id: string,
     updateBookRequest: UpdateBookRequest,
-  ): Promise<Book> {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Invalid ID format')
-    }
+  ): Promise<Book> => {
+    validateObjectId(id, ErrorMessages.books.INVALID_ID)
 
     const updatedBook = await this.bookModel
       .findByIdAndUpdate(id, updateBookRequest, { new: true })
-      .populate('categoryId')
+      .populate(POPULATE_FIELDS.CATEGORY)
 
-    if (!updatedBook) {
-      throw new NotFoundException(`Book with ID ${id} not found`)
-    }
-
+    validateExists(updatedBook, ErrorMessages.books.NOT_FOUND(id))
     return updatedBook
   }
 
-  async remove(id: string): Promise<Book> {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Invalid ID format')
-    }
-
+  remove = async (id: string): Promise<Book> => {
     const deletedBook = await this.bookModel.findByIdAndDelete(id)
-    if (!deletedBook) {
-      throw new NotFoundException(`Book with ID ${id} not found`)
-    }
-
     return deletedBook
   }
-  async addComment(
+
+  addComment = async (
     bookId: string,
     userId: string,
     comment: string,
-  ): Promise<Book> {
-    if (!isValidObjectId(bookId)) {
-      throw new BadRequestException('Invalid Book ID format')
-    }
-
-    const book = await this.bookModel.findById(bookId)
-    if (!book) {
-      throw new NotFoundException(`Book with ID ${bookId} not found`)
-    }
-
+  ): Promise<Book> => {
+    const book = await this.findBookById(bookId)
     book.comments.push({ userId: new Types.ObjectId(userId), comment })
-    return await book.save()
+    return book.save()
   }
 
-  async addReview(
+  addReview = async (
     bookId: string,
     userId: string,
     rating: number,
     comment: string,
-  ): Promise<Book> {
-    if (!isValidObjectId(bookId)) {
-      throw new BadRequestException('Invalid Book ID format')
-    }
-    if (rating < 1 || rating > 5) {
-      throw new BadRequestException('Rating must be between 1 and 5')
-    }
-
-    const book = await this.bookModel.findById(bookId)
-    if (!book) {
-      throw new NotFoundException(`Book with ID ${bookId} not found`)
-    }
-
+  ): Promise<Book> => {
+    validateRating(rating)
+    const book = await this.findBookById(bookId)
     const existingReviewIndex = book.reviews.findIndex(
       (review) => review.userId.toString() === userId,
     )
@@ -154,63 +168,37 @@ export class BooksService {
       book.reviews.push({ userId: new Types.ObjectId(userId), rating, comment })
     }
 
-    const totalRatings = book.reviews.reduce(
-      (sum, review) => sum + review.rating,
-      0,
-    )
-    book.averageRating = totalRatings / book.reviews.length
-
-    return await book.save()
+    book.averageRating = this.calculateAverageRating(book.reviews)
+    return book.save()
   }
 
-  async likeBook(bookId: string, userId: string): Promise<Book> {
-    if (!isValidObjectId(bookId)) {
-      throw new BadRequestException('Invalid Book ID format')
+  private calculateAverageRating = (reviews: { rating: number }[]): number => {
+    let totalRatings = 0
+    for (const review of reviews) {
+      totalRatings += review.rating
     }
+    return reviews.length === 0 ? 0 : totalRatings / reviews.length
+  }
 
-    const book = await this.bookModel.findById(bookId)
-    if (!book) {
-      throw new NotFoundException(`Book with ID ${bookId} not found`)
-    }
-
-    if (book.likes.includes(new Types.ObjectId(userId))) {
-      throw new BadRequestException('You have already liked this book')
-    }
-
+  likeBook = async (bookId: string, userId: string): Promise<Book> => {
+    const book = await this.findBookById(bookId)
+    validateAlreadyLiked(book.likes, userId)
     book.likes.push(new Types.ObjectId(userId))
-    return await book.save()
+    return book.save()
   }
 
-  async dislikeBook(bookId: string, userId: string): Promise<Book> {
-    if (!isValidObjectId(bookId)) {
-      throw new BadRequestException('Invalid Book ID format')
-    }
-
-    const book = await this.bookModel.findById(bookId)
-    if (!book) {
-      throw new NotFoundException(`Book with ID ${bookId} not found`)
-    }
-
-    const likeIndex = book.likes.indexOf(new Types.ObjectId(userId))
-    if (likeIndex === -1) {
-      throw new BadRequestException('You have not liked this book yet')
-    }
-
+  dislikeBook = async (bookId: string, userId: string): Promise<Book> => {
+    const book = await this.findBookById(bookId)
+    validateNotLiked(book.likes, userId)
+    const likeIndex = book.likes.findIndex(
+      (likeId) => likeId.toString() === userId,
+    )
     book.likes.splice(likeIndex, 1)
-    return await book.save()
+    return book.save()
   }
 
-  async getLikedBooks(userId: string): Promise<Book[]> {
-    if (!isValidObjectId(userId)) {
-      throw new BadRequestException('Invalid User ID format')
-    }
-
-    const books = await this.bookModel
-      .find({ likes: userId })
-      .populate('categoryId')
-      .populate('comments.userId', 'username email')
-      .populate('reviews.userId', 'username email')
-
-    return books
+  getLikedBooks = async (userId: string): Promise<Book[]> => {
+    validateObjectId(userId, ErrorMessages.books.INVALID_ID)
+    return this.populateBook(this.bookModel.find({ likes: userId }))
   }
 }
